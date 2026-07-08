@@ -25,6 +25,7 @@
   var tlPath = document.querySelector('.tl-axis path');
   var tlOff = 0, tlW = 1;
   var finePointer = window.matchMedia('(pointer: fine)').matches;
+  var touchCapable = window.matchMedia('(pointer: coarse)').matches || ('ontouchstart' in window);
 
   // agrupamento das marcas: os quatro painéis de projetos acendem a mesma marca
   var tickGroups = {
@@ -157,24 +158,6 @@
     if (!intro) return;
     if (!root.classList.contains('introing')) { intro.parentNode.removeChild(intro); return; }
     try { sessionStorage.setItem('jpy-seen', '1'); } catch (e) { /* sem storage */ }
-
-    // o ensō da abertura reage ao cursor: parallax + leve giro, como um pincel guiado
-    if (motion && finePointer) {
-      var enso = intro.querySelector('.intro-enso');
-      if (enso) {
-        intro.addEventListener('pointermove', function (e) {
-          if (e.pointerType === 'touch') return;
-          var nx = e.clientX / window.innerWidth - 0.5;   // -0.5 … 0.5
-          var ny = e.clientY / window.innerHeight - 0.5;
-          enso.style.translate = (nx * 54).toFixed(1) + 'px ' + (ny * 54).toFixed(1) + 'px';
-          enso.style.rotate = (nx * 13).toFixed(2) + 'deg';
-          enso.style.scale = (1 + Math.abs(nx) * 0.12).toFixed(3);
-        });
-        intro.addEventListener('pointerleave', function () {
-          enso.style.translate = ''; enso.style.rotate = ''; enso.style.scale = '';
-        });
-      }
-    }
 
     setTimeout(function () { intro.classList.add('intro-out'); }, 1950);
     setTimeout(function () {
@@ -349,10 +332,46 @@
 
   viewport.addEventListener('pointerdown', function (e) {
     if (e.button !== 0) return;
+    if (e.pointerType === 'touch') return; // toque tratado abaixo (gesto lateral)
     if (e.target.closest('a, button, input, textarea')) return;
     dragStart = { x: e.clientX, y: e.clientY };
     dragged = false;
   });
+
+  /* ---------- toque: deslizar para o lado navega os painéis ---------- */
+  if (touchCapable) {
+    document.documentElement.classList.add('touch-mode');
+    var tStart = null, tAxis = null, tMoved = false;
+
+    viewport.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1) { tStart = null; return; }
+      var t = e.touches[0];
+      tStart = { x: t.clientX, y: t.clientY, s: Math.min(window.scrollY, maxScroll) };
+      tAxis = null; tMoved = false;
+    }, { passive: true });
+
+    viewport.addEventListener('touchmove', function (e) {
+      if (!tStart) return;
+      var t = e.touches[0];
+      var dx = t.clientX - tStart.x, dy = t.clientY - tStart.y;
+      if (!tAxis) {
+        if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+        tAxis = Math.abs(dx) >= Math.abs(dy) ? 'x' : 'y';
+      }
+      // ambos os eixos empurram o scroll lateral: o portfólio nunca rola pra baixo
+      var delta = tAxis === 'x' ? dx : dy;
+      if (Math.abs(delta) > 4) tMoved = true;
+      e.preventDefault();
+      window.scrollTo(0, Math.max(0, Math.min(maxScroll, tStart.s - delta)));
+    }, { passive: false });
+
+    viewport.addEventListener('touchend', function () { tStart = null; });
+
+    // suprime o clique fantasma que dispararia após um arraste
+    viewport.addEventListener('click', function (e) {
+      if (tMoved) { e.preventDefault(); e.stopPropagation(); tMoved = false; }
+    }, true);
+  }
 
   window.addEventListener('pointermove', function (e) {
     // guarda o alvo; o loop suaviza o anel do cursor
@@ -405,7 +424,7 @@
     });
   }
 
-  var k = motion ? 0.09 : 1;
+  var k = motion ? (touchCapable ? 0.34 : 0.09) : 1;
 
   function loop() {
     requestAnimationFrame(loop);

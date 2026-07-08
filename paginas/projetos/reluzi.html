@@ -1,71 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="../../midia/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="../../css/main.css">
-    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
-    <title>Portfólio - João Paulo Yudi</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Reluzi - e-commerce de semijoias em WordPress. Projeto de João Paulo Yudi.">
+  <link rel="shortcut icon" href="../../midia/favicon.ico" type="image/x-icon">
+  <title>Reluzi - João Paulo Yudi</title>
+  <meta name="theme-color" content="#0B0F09">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="../../css/detail.css">
 </head>
+
 <body>
-    <header class="menu-principal">
-        <main>
-            <div class="header-1">
-                <div class="atalhos">
-                    <ul>
-                        <li>
-                            <a href="../../index.html">
-                                <p class="texto1">
-                                    Projetos
-                                </p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../sobre.html">
-                                <p class="texto2">
-                                    Sobre
-                                </p>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="../contato.html">
-                                <p class="texto1">
-                                    Contato
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </main>
-    </header>
-    <section class="pag-proj">
-        <div class="hidden">
-            <section class="texto-proj">
-                <p class="titulo-pag-proj">
-                    Site Reluzi
-                </p>
-                <div class="display-flex">
-                    <p class="subtitulo-pag-proj">
-                        WordPress
-                    </p>
-                    <p class="descrição">
-                        Desenvolvimento de site de semijoias no WordPress, priorizando a elegância e usabilidade.
-                        Temas e plugins que refletem a sofisticação dos produtos.
-                        Sistema de e-commerce intuitivo e otimizado para dispositivos móveis, garantindo uma experiência de compra fluida.
-                    </p>
-                </div>
-                <img class="img-proj" src="../../midia/Projetos/Reluzi/tela1.jpg" alt="1">
-                <img class="img-proj" src="../../midia/Projetos/Reluzi/tela2.png" alt="2">
-                <img class="img-proj" src="../../midia/Projetos/Reluzi/tela3.jpg" alt="3">
-                <img class="img-proj" src="../../midia/Projetos/Reluzi/tela4.png" alt="4">
-            </section>
-        </div>
-    </section>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
-    <script src="../../js/scripts.js"></script>
+  <!-- filtro de pincel sumi-ê -->
+  <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
+    <defs>
+      <filter id="brush" x="-30%" y="-30%" width="160%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02 0.09" numOctaves="3" seed="7" result="t"></feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="18"></feDisplacementMap>
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <nav class="topnav">
+    <a class="brand" href="../../index.html">
+      <span class="brand-name">João Paulo Yudi</span>
+    </a>
+    <a class="back" href="../../index.html#panel-outros">← Todos os projetos</a>
+  </nav>
+
+  <header class="p-hero">
+    <span class="kanji-glyph" aria-hidden="true">作</span>
+    <p class="kicker">Projeto · E-commerce</p>
+    <h1 class="p-title">Reluzi<span class="dot">.</span></h1>
+    <svg class="brush-underline" width="240" height="16" viewBox="0 0 240 16" aria-hidden="true">
+      <path d="M4 9 C 70 4, 170 13, 236 7" pathLength="100" fill="none" stroke="#8CA85A" stroke-width="4" stroke-linecap="round" filter="url(#brush)" opacity="0.8"></path>
+    </svg>
+    <div class="tags">
+      <span class="tag hot">WordPress</span>
+      <span class="tag ghost">E-commerce</span>
+    </div>
+    <p class="lead">
+      Site de semijoias desenvolvido no WordPress, priorizando elegância e usabilidade, com temas
+      e plugins que refletem a sofisticação dos produtos. Sistema de e-commerce intuitivo e
+      otimizado para dispositivos móveis, garantindo uma experiência de compra fluida.
+    </p>
+    <div class="meta">
+      <div class="meta-item"><span class="k">Stack</span><span class="v">WordPress</span></div>
+      <div class="meta-item"><span class="k">Tipo</span><span class="v">E-commerce de semijoias</span></div>
+    </div>
+  </header>
+
+  <main class="gallery">
+    <figure class="frame" data-reveal>
+      <img loading="lazy" src="../../midia/Projetos/Reluzi/tela1.jpg" alt="Página inicial do e-commerce Reluzi">
+    </figure>
+    <figure class="frame" data-reveal>
+      <img loading="lazy" src="../../midia/Projetos/Reluzi/tela2.png" alt="Vitrine de produtos da Reluzi">
+    </figure>
+    <figure class="frame" data-reveal>
+      <img loading="lazy" src="../../midia/Projetos/Reluzi/tela3.jpg" alt="Página de produto da Reluzi">
+    </figure>
+    <figure class="frame" data-reveal>
+      <img loading="lazy" src="../../midia/Projetos/Reluzi/tela4.png" alt="Versão mobile do site Reluzi">
+    </figure>
+  </main>
+
+  <footer class="p-foot">
+    <div class="nextprev">
+      <a class="np prev" href="sanitas.html">
+        <span class="np-k">← Anterior</span>
+        <span class="np-t">Sanitas</span>
+      </a>
+      <a class="np next" href="quiz-tech.html">
+        <span class="np-k">Próximo →</span>
+        <span class="np-t">Quiz Tech</span>
+      </a>
+    </div>
+    <div class="foot-contact">
+      <a href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a>
+      <span>© 2026 João Paulo Yudi</span>
+    </div>
+  </footer>
+
+  <script src="../../js/detail.js"></script>
 </body>
+
 </html>

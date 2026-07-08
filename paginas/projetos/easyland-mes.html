@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Easyland MES - front-end de uma plataforma MES industrial: um Dashboard em React para a gestão e um app Operator em Angular para o chão de fábrica. Projeto de João Paulo Yudi.">
+  <link rel="shortcut icon" href="../../midia/favicon.ico" type="image/x-icon">
+  <title>Easyland MES - João Paulo Yudi</title>
+  <meta name="theme-color" content="#0B0F09">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="../../css/detail.css">
+</head>
+
+<body>
+  <!-- filtro de pincel sumi-ê -->
+  <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
+    <defs>
+      <filter id="brush" x="-30%" y="-30%" width="160%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02 0.09" numOctaves="3" seed="7" result="t"></feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="18"></feDisplacementMap>
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <nav class="topnav">
+    <a class="brand" href="../../index.html">
+      <span class="brand-name">João Paulo Yudi</span>
+    </a>
+    <a class="back" href="../../index.html#panel-p1">← Todos os projetos</a>
+  </nav>
+
+  <header class="p-hero">
+    <span class="kanji-glyph" aria-hidden="true">工</span>
+    <p class="kicker">Projeto · Indústria · MES</p>
+    <h1 class="p-title">Easyland <span class="stroke">MES</span><span class="dot">.</span></h1>
+    <svg class="brush-underline" width="240" height="16" viewBox="0 0 240 16" aria-hidden="true">
+      <path d="M4 9 C 70 4, 170 13, 236 7" pathLength="100" fill="none" stroke="#8CA85A" stroke-width="4" stroke-linecap="round" filter="url(#brush)" opacity="0.8"></path>
+    </svg>
+    <div class="tags">
+      <span class="tag hot">React</span>
+      <span class="tag hot">Angular</span>
+      <span class="tag ghost">Front-end</span>
+    </div>
+    <p class="lead">
+      Front-end da plataforma MES (Manufacturing Execution System) de uma fábrica de peças
+      agrícolas. Minha atuação foi exclusivamente no front-end, dividido em duas aplicações
+      com públicos e objetivos distintos - uma voltada à gestão e outra ao chão de fábrica.
+    </p>
+    <div class="meta">
+      <div class="meta-item"><span class="k">Stack</span><span class="v">React · Angular</span></div>
+      <div class="meta-item"><span class="k">Papel</span><span class="v">Front-end</span></div>
+      <div class="meta-item"><span class="k">Setor</span><span class="v">Indústria · MES</span></div>
+      <div class="meta-item"><span class="k">Ano</span><span class="v">2025</span></div>
+    </div>
+  </header>
+
+  <section class="split">
+    <div class="split-card">
+      <span class="split-k">Dashboard · React</span>
+      <h3 class="split-t">Administração da fábrica</h3>
+      <p>
+        Feito em React, é voltado para a administração. Foca em controle de qualidade, KPIs de
+        produção, previsões e painéis de atrasos, dando à gestão uma visão consolidada da
+        operação em tempo real.
+      </p>
+    </div>
+    <div class="split-card">
+      <span class="split-k">Operator · Angular</span>
+      <h3 class="split-t">Chão de fábrica</h3>
+      <p>
+        Feito em Angular, é voltado para os operadores. Foca na execução de processos:
+        acompanhamento de ordens de produção, etapas, apontamentos de produção e refugo, e
+        rastreabilidade das peças.
+      </p>
+    </div>
+  </section>
+
+  <main class="gallery">
+    <figure class="frame" data-reveal>
+      <img loading="lazy" src="../../midia/Projetos/Easyland MES/1.png" alt="Dashboard em React do Easyland MES com KPIs e status das ordens de produção">
+      <figcaption>Dashboard (React) - visão geral e KPIs de produção</figcaption>
+    </figure>
+    <figure class="frame" data-reveal>
+      <img loading="lazy" src="../../midia/Projetos/Easyland MES/2.png" alt="Dashboard em React do Easyland MES com métricas de sensores e tendência temporal">
+      <figcaption>Dashboard (React) - métricas de sensores e tendências</figcaption>
+    </figure>
+    <figure class="frame" data-reveal>
+      <img loading="lazy" src="../../midia/Projetos/Easyland MES/3.png" alt="App Operator em Angular do Easyland MES com a lista de ordens de produção">
+      <figcaption>Operator (Angular) - ordens de produção do chão de fábrica</figcaption>
+    </figure>
+    <figure class="frame" data-reveal>
+      <img loading="lazy" src="../../midia/Projetos/Easyland MES/4.png" alt="App Operator em Angular do Easyland MES com as etapas e apontamento de uma ordem">
+      <figcaption>Operator (Angular) - etapas e apontamento de uma OP</figcaption>
+    </figure>
+  </main>
+
+  <footer class="p-foot">
+    <div class="nextprev">
+      <a class="np prev" href="studyenem.html">
+        <span class="np-k">← Anterior</span>
+        <span class="np-t">StudyEnem</span>
+      </a>
+      <a class="np next" href="chamadopro.html">
+        <span class="np-k">Próximo →</span>
+        <span class="np-t">ChamadoPro</span>
+      </a>
+    </div>
+    <div class="foot-contact">
+      <a href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a>
+      <span>© 2026 João Paulo Yudi</span>
+    </div>
+  </footer>
+
+  <script src="../../js/detail.js"></script>
+</body>
+
+</html>

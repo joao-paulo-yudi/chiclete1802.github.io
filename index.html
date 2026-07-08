@@ -1,140 +1,472 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfólio de João Paulo Yudi - desenvolvedor front-end. React, Angular e JavaScript.">
   <link rel="shortcut icon" href="./midia/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" type="text/css" href="css/main.css">
-  <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
-  <title>Portfólio - João Paulo Yudi</title>
+  <title>João Paulo Yudi - Portfólio</title>
+  <meta name="theme-color" content="#0B0F09">
+  <meta property="og:title" content="João Paulo Yudi - Portfólio">
+  <meta property="og:description" content="Desenvolvedor front-end - React, Angular e JavaScript. Um portfólio pintado em tinta sumi-ê.">
+  <meta property="og:type" content="website">
+  <script>
+    try {
+      if (localStorage.getItem('jpy-lang') === 'en') document.documentElement.classList.add('lang-en');
+      if (!sessionStorage.getItem('jpy-seen') && !matchMedia('(prefers-reduced-motion: reduce)').matches)
+        document.documentElement.classList.add('introing');
+    } catch (e) { }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="css/v3.css">
+  <noscript>
+    <style>
+      #viewport { position: static; overflow: visible; }
+      #track { flex-direction: column; width: auto; height: auto; }
+      .panel { width: auto !important; min-width: 0 !important; height: auto; min-height: 100vh; }
+      .progress, .indicator-wrap, #intro, #cursor-dot, #cursor-ring { display: none !important; }
+      .kanji { opacity: 1 !important; }
+      .wire .w, .brush-underline path, .tl-axis path { stroke-dashoffset: 0 !important; }
+      .wire .wf { opacity: 1 !important; }
+    </style>
+  </noscript>
 </head>
 
-<body id="main1">
-  <header class="menu-principal">
-    <main>
-      <div class="header-1">
-        <div class="atalhos">
-          <ul>
-            <div class="hidden">
-              <li>
-                <a href="index.html">
-                  <p class="texto1-sel">
-                    Projetos
-                  </p>
-                </a>
-              </li>
-            </div>
+<body>
+  <!-- filtros de pincel sumi-ê -->
+  <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
+    <defs>
+      <filter id="brush" x="-30%" y="-30%" width="160%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02 0.09" numOctaves="3" seed="7" result="t"></feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="18"></feDisplacementMap>
+      </filter>
+      <filter id="brushSoft" x="-30%" y="-30%" width="160%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.05" numOctaves="2" seed="11" result="t"></feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="26"></feDisplacementMap>
+      </filter>
+    </defs>
+  </svg>
 
-            <div class="hidden">
-              <li>
-                <a href="paginas/sobre.html">
-                  <p class="texto2">
-                    Sobre
-                  </p>
-                </a>
-              </li>
+  <div class="grain" aria-hidden="true"></div>
 
-            </div>
-            <div class="hidden">
-              <li>
-                <a href="paginas/contato.html">
-                  <p class="texto1">
-                    Contato
-                  </p>
-                </a>
-              </li>
-            </div>
-          </ul>
+  <!-- abertura caligráfica -->
+  <div id="intro" aria-hidden="true">
+    <div class="intro-inner">
+      <svg class="intro-enso" width="340" height="340" viewBox="0 0 340 340" aria-hidden="true">
+        <circle cx="170" cy="170" r="142" pathLength="100" fill="none" stroke="#8CA85A" stroke-width="5" stroke-linecap="round" opacity="0.8" filter="url(#brush)"></circle>
+      </svg>
+      <span class="intro-name">João Paulo Yudi</span>
+      <span class="intro-kana">ポートフォリオ</span>
+    </div>
+  </div>
+
+  <!-- cursor -->
+  <div id="cursor-ring" aria-hidden="true"></div>
+  <div id="cursor-dot" aria-hidden="true"></div>
+
+  <div id="viewport">
+    <div id="track">
+
+      <!-- ==================== 01 · INÍCIO ==================== -->
+      <section id="panel-hero" class="panel panel-hero" data-nav-pt="01 · INÍCIO" data-nav-en="01 · START">
+        <div class="glow glow-hero-a"></div>
+        <div class="glow glow-hero-b"></div>
+        <svg class="enso-hero" data-depth="0.18" width="780" height="780" viewBox="0 0 780 780" aria-hidden="true">
+          <circle class="enso-main" cx="390" cy="390" r="326" pathLength="100" fill="none" stroke="#8CA85A" stroke-width="7" stroke-linecap="round" opacity="0.75" filter="url(#brush)"></circle>
+          <circle class="enso-echo" cx="390" cy="390" r="296" pathLength="100" fill="none" stroke="#E9EBDC" stroke-width="2" stroke-linecap="round" opacity="0.15" filter="url(#brushSoft)"></circle>
+        </svg>
+
+        <div class="hero-content">
+          <div class="hero-kicker">
+            <span class="label"><span class="pt">Desenvolvedor front-end</span><span class="en">Front-end developer</span></span>
+          </div>
+          <h1 class="hero-title">
+            <span class="line"><span class="rise">João Paulo</span></span>
+            <span class="line"><span class="rise stroke">Yudi<span class="dot">.</span></span></span>
+          </h1>
+          <p class="hero-sub">
+            React · Angular · JavaScript<br>
+            <span class="pt">Aplicações web e sistemas industriais.</span><span class="en">Web applications and industrial systems.</span>
+          </p>
+          <div class="hero-actions">
+            <button class="cta" data-goto="panel-p1" data-magnetic>
+              <span class="pt">Ver projetos</span><span class="en">View works</span>
+              <span class="arrow">→</span>
+            </button>
+          </div>
         </div>
-      </div>
-    </main>
-  </header>
-  <div class="nome">
-    <div class="hidden">
-      <p class="titulo-p">
-        João Paulo Yudi
-      </p>
-    </div>
-    <div class="hidden">
-      <p class="subtitulo">
-        Programador, Técnico em Desenvolvimento de Sistemas
-      </p>
+        <span class="side-label bottom">João Paulo Yudi - 2026</span>
+      </section>
+
+      <!-- ==================== 02 · SOBRE ==================== -->
+      <section id="panel-sobre" class="panel panel-sobre panel-bordered" data-nav-pt="02 · SOBRE" data-nav-en="02 · ABOUT">
+        <span class="bigno" data-depth="0.22">01</span>
+        <div class="kanji" data-depth="0.14" aria-hidden="true">
+          <span class="kanji-glyph">私</span>
+          <span class="kanji-cap"><span class="pt">watashi - eu</span><span class="en">watashi - self</span></span>
+        </div>
+
+        <div class="sobre-row">
+          <div class="pfp-wrap" data-reveal data-tilt>
+            <div class="pfp-frame">
+              <img src="midia/pfp.jpg" alt="Foto de João Paulo Yudi">
+            </div>
+          </div>
+
+          <div class="sobre-info">
+            <div class="section-head" data-reveal>
+              <span class="sec-num">01</span>
+              <h2 class="sec-title"><span class="pt">Sobre mim</span><span class="en">About me</span></h2>
+              <svg class="brush-underline" width="150" height="14" viewBox="0 0 150 14" aria-hidden="true">
+                <path d="M4 8 C 44 4, 104 11, 146 6" pathLength="100" fill="none" stroke="#8CA85A" stroke-width="4" stroke-linecap="round" filter="url(#brush)" opacity="0.8"></path>
+              </svg>
+            </div>
+
+            <p class="lead" data-reveal>
+              <span class="pt">Me chamo João Paulo Yudi. Sou técnico em Desenvolvimento de Sistemas e curso Ciência da Computação no Instituto Federal de São Paulo. Tenho experiência como programador e técnico de TI, do front-end de sistemas industriais a plataformas web.</span>
+              <span class="en">I'm João Paulo Yudi, a Systems Development technician and Computer Science undergraduate at the Federal Institute of São Paulo. I work as a programmer and IT technician, from industrial systems front-ends to web platforms.</span>
+            </p>
+
+            <div class="edu">
+              <div class="edu-label" data-reveal><span class="pt">Formação acadêmica</span><span class="en">Education</span></div>
+              <div class="edu-row" data-reveal>
+                <div class="txt">
+                  <span class="course"><span class="pt">Ciência da Computação - Bacharelado</span><span class="en">Computer Science - B.Sc.</span></span>
+                  <span class="school">Instituto Federal de São Paulo</span>
+                </div>
+                <span class="when"><span class="pt">12/2026</span><span class="en">12/2026</span></span>
+              </div>
+              <div class="edu-row" data-reveal>
+                <div class="txt">
+                  <span class="course"><span class="pt">Desenvolvimento de Sistemas - Técnico</span><span class="en">Systems Development - Technical degree</span></span>
+                  <span class="school">Etec Fernando Prestes</span>
+                </div>
+                <span class="when"><span class="pt">11/2022</span><span class="en">11/2022</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="side-label"><span class="pt">Sobre - 01</span><span class="en">About - 01</span></span>
+      </section>
+
+      <!-- ==================== 03 · PROJETOS - StudyEnem ==================== -->
+      <section id="panel-p1" class="panel panel-proj panel-grad panel-bordered" data-nav-pt="03 · PROJETOS" data-nav-en="03 · WORKS">
+        <span class="bigword top" data-depth="0.3">StudyEnem</span>
+        <div class="proj-row">
+          <a class="shot" href="paginas/projetos/studyenem.html" data-reveal data-tilt aria-label="Abrir o projeto StudyEnem">
+            <img src="midia/Projetos/StudyEnem/1.png" alt="Dashboard do StudyEnem com métricas de desempenho e learning analytics">
+            <span class="shot-view"><span class="pt">Ver projeto</span><span class="en">View project</span> <span class="arr">→</span></span>
+          </a>
+          <div class="proj-info">
+            <span class="proj-index" data-reveal>01 / 03</span>
+            <span class="proj-cat" data-reveal><span class="pt">Educação · Web App</span><span class="en">Education · Web App</span></span>
+            <h3 class="proj-title" data-reveal>Study<span class="stroke">Enem</span></h3>
+            <p class="proj-desc" data-reveal>
+              <span class="pt">Plataforma para realização de simulados do ENEM e organização de planos de estudo.</span>
+              <span class="en">Platform for taking ENEM practice exams and organizing study plans.</span>
+            </p>
+            <div class="tags" data-reveal>
+              <span class="tag hot">Angular</span>
+              <span class="tag ghost">.NET C#</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 03 · PROJETOS - Easyland MES ==================== -->
+      <section id="panel-p2" class="panel panel-proj" data-nav-pt="03 · PROJETOS" data-nav-en="03 · WORKS">
+        <span class="bigword bottom" data-depth="0.3">Easyland</span>
+        <div class="proj-row flip">
+          <div class="proj-info">
+            <span class="proj-index" data-reveal>02 / 03</span>
+            <span class="proj-cat" data-reveal><span class="pt">Indústria · MES</span><span class="en">Industry · MES</span></span>
+            <h3 class="proj-title" data-reveal>Easyland <span class="stroke">MES</span></h3>
+            <p class="proj-desc" data-reveal>
+              <span class="pt">Front-end da plataforma MES (Manufacturing Execution System) de uma fábrica de peças agrícolas.</span>
+              <span class="en">Front-end for the MES platform (Manufacturing Execution System) of an agricultural parts factory.</span>
+            </p>
+            <div class="tags" data-reveal>
+              <span class="tag hot">Angular</span>
+              <span class="tag ghost">React</span>
+            </div>
+          </div>
+          <a class="shot" href="paginas/projetos/easyland-mes.html" data-reveal data-tilt aria-label="Abrir o projeto Easyland MES">
+            <img src="midia/Projetos/Easyland MES/1.png" alt="Dashboard em React do Easyland MES com KPIs e status de produção">
+            <span class="shot-view"><span class="pt">Ver projeto</span><span class="en">View project</span> <span class="arr">→</span></span>
+          </a>
+        </div>
+      </section>
+
+      <!-- ==================== 03 · PROJETOS - ChamadoPro ==================== -->
+      <section id="panel-p3" class="panel panel-proj panel-grad" data-nav-pt="03 · PROJETOS" data-nav-en="03 · WORKS">
+        <span class="bigword top" data-depth="0.3">ChamadoPro</span>
+        <div class="proj-row">
+          <a class="shot" href="paginas/projetos/chamadopro.html" data-reveal data-tilt aria-label="Abrir o projeto ChamadoPro">
+            <img src="midia/Projetos/ChamadoPro/2.jpg" alt="Fila de chamados do ChamadoPro com prioridades e status">
+            <span class="shot-view"><span class="pt">Ver projeto</span><span class="en">View project</span> <span class="arr">→</span></span>
+          </a>
+          <div class="proj-info">
+            <span class="proj-index" data-reveal>03 / 03</span>
+            <span class="proj-cat" data-reveal><span class="pt">Suporte de TI · Sistema</span><span class="en">IT Support · System</span></span>
+            <h3 class="proj-title" data-reveal>Chamado<span class="stroke">Pro</span></h3>
+            <p class="proj-desc" data-reveal>
+              <span class="pt">Sistema de gerenciamento de chamados para empresa de suporte de TI.</span>
+              <span class="en">Ticket management system for an IT support company.</span>
+            </p>
+            <div class="tags" data-reveal>
+              <span class="tag hot">Angular</span>
+              <span class="tag ghost">Java</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 03 · PROJETOS - outros ==================== -->
+      <section id="panel-outros" class="panel panel-outros" data-nav-pt="03 · PROJETOS" data-nav-en="03 · WORKS">
+        <div class="outros-inner">
+          <div class="outros-head" data-reveal>
+            <span class="label"><span class="pt">Outros trabalhos</span><span class="en">More works</span></span>
+            <span class="rule"></span>
+          </div>
+          <div class="cards">
+            <a class="card" data-reveal data-tilt href="paginas/projetos/controle-de-estoque.html">
+              <img src="midia/Projetos/Controle de Estoque/tela1.png" alt="Controle de Estoque">
+              <span class="row">
+                <span class="name"><span class="pt">Controle de Estoque</span><span class="en">Inventory Control</span></span>
+                <span class="go">→</span>
+              </span>
+              <span class="tech">C# · .NET · SQL Server</span>
+            </a>
+            <a class="card" data-reveal data-tilt href="paginas/projetos/sanitas.html">
+              <img src="midia/Projetos/Sanitas/tela1.png" alt="Sanitas">
+              <span class="row">
+                <span class="name">Sanitas</span>
+                <span class="go">→</span>
+              </span>
+              <span class="tech">HTML · CSS · JavaScript</span>
+            </a>
+            <a class="card" data-reveal data-tilt href="paginas/projetos/reluzi.html">
+              <img src="midia/Projetos/Reluzi/tela1.jpg" alt="Reluzi">
+              <span class="row">
+                <span class="name">Reluzi</span>
+                <span class="go">→</span>
+              </span>
+              <span class="tech">WordPress</span>
+            </a>
+            <a class="card" data-reveal data-tilt href="paginas/projetos/quiz-tech.html">
+              <img src="midia/Projetos/quiz-tech/1.jpeg" alt="Quiz Tech">
+              <span class="row">
+                <span class="name">Quiz Tech</span>
+                <span class="go">→</span>
+              </span>
+              <span class="tech">Node.js</span>
+            </a>
+          </div>
+        </div>
+        <span class="side-label"><span class="pt">Projetos - 02</span><span class="en">Works - 02</span></span>
+      </section>
+
+      <!-- ==================== 04 · HABILIDADES ==================== -->
+      <section id="panel-skills" class="panel panel-skills panel-bordered" data-nav-pt="04 · HABILIDADES" data-nav-en="04 · SKILLS">
+        <span class="bigno" data-depth="0.22">02</span>
+        <div class="kanji" data-depth="0.14" aria-hidden="true">
+          <span class="kanji-glyph">技</span>
+          <span class="kanji-cap"><span class="pt">waza - habilidade</span><span class="en">waza - skill</span></span>
+        </div>
+
+        <div class="section-head" data-reveal>
+          <span class="sec-num">02</span>
+          <h2 class="sec-title"><span class="pt">Habilidades</span><span class="en">Skills</span></h2>
+          <svg class="brush-underline" width="180" height="14" viewBox="0 0 180 14" aria-hidden="true">
+            <path d="M4 9 C 54 4, 126 12, 176 6" pathLength="100" fill="none" stroke="#8CA85A" stroke-width="4" stroke-linecap="round" filter="url(#brush)" opacity="0.8"></path>
+          </svg>
+        </div>
+
+        <div class="skills-row">
+          <div class="skill-col" data-reveal>
+            <span class="col-label">Front-end</span>
+            <div class="items">
+              <span class="skill-item">Angular</span>
+              <span class="skill-item">React</span>
+              <span class="skill-item">JavaScript</span>
+            </div>
+          </div>
+          <div class="skill-col" data-reveal>
+            <span class="col-label"><span class="pt">Back-end &amp; Dados</span><span class="en">Back-end &amp; Data</span></span>
+            <div class="items">
+              <span class="skill-item">C# &amp; .NET</span>
+              <span class="skill-item">Node.js</span>
+              <span class="skill-item">SQL Server</span>
+            </div>
+          </div>
+          <div class="skill-col" data-reveal>
+            <span class="col-label"><span class="pt">Ferramentas</span><span class="en">Tools</span></span>
+            <div class="items">
+              <span class="skill-item">Docker</span>
+              <span class="skill-item">Git</span>
+              <span class="skill-item">Photoshop</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 05 · TRAJETÓRIA (do mais antigo ao mais recente) ==================== -->
+      <section id="panel-trajetoria" class="panel panel-traj panel-grad panel-bordered" data-nav-pt="05 · TRAJETÓRIA" data-nav-en="05 · JOURNEY">
+        <span class="bigno" data-depth="0.22">03</span>
+        <div class="kanji" data-depth="0.14" aria-hidden="true">
+          <span class="kanji-glyph">道</span>
+          <span class="kanji-cap"><span class="pt">michi - caminho</span><span class="en">michi - the path</span></span>
+        </div>
+
+        <div class="section-head" data-reveal>
+          <span class="sec-num">03</span>
+          <h2 class="sec-title"><span class="pt">Trajetória</span><span class="en">Journey</span></h2>
+          <svg class="brush-underline" width="180" height="14" viewBox="0 0 180 14" aria-hidden="true">
+            <path d="M4 7 C 54 12, 126 4, 176 9" pathLength="100" fill="none" stroke="#8CA85A" stroke-width="4" stroke-linecap="round" filter="url(#brush)" opacity="0.8"></path>
+          </svg>
+        </div>
+
+        <div class="tl-wrap">
+          <svg class="tl-axis" width="100%" height="20" viewBox="0 0 1600 20" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M8 11 C 300 6, 600 15, 900 9 C 1150 4, 1400 13, 1592 8" pathLength="100" fill="none" stroke="rgba(233,235,220,0.22)" stroke-width="3" stroke-linecap="round" filter="url(#brushSoft)"></path>
+          </svg>
+          <div class="tl-grid">
+            <div class="tl-entry" data-reveal>
+              <div class="tl-card top">
+                <span class="tl-role"><span class="pt">Assistente de Marketing Digital</span><span class="en">Digital Marketing Assistant</span></span>
+                <span class="tl-org">Kazza Art - 2022</span>
+              </div>
+              <span class="tl-dot ra"></span>
+            </div>
+            <div class="tl-entry" data-reveal>
+              <span class="tl-dot rb"></span>
+              <div class="tl-card bottom">
+                <span class="tl-role"><span class="pt">Professor de Inglês</span><span class="en">English Teacher</span></span>
+                <span class="tl-org">Via Certa - 2022 </span>
+              </div>
+            </div>
+            <div class="tl-entry" data-reveal>
+              <div class="tl-card top">
+                <span class="tl-role"><span class="pt">Professor de Informática</span><span class="en">Computer Science Teacher</span></span>
+                <span class="tl-org">Microlins - 2023</span>
+              </div>
+              <span class="tl-dot rc"></span>
+            </div>
+            <div class="tl-entry" data-reveal>
+              <div class="tl-card bottom">
+                <span class="tl-role"><span class="pt">Estagiário de TI</span><span class="en">IT Intern</span></span>
+                <span class="tl-org">Jungux Tecnologia - 2024</span>
+              </div>
+              <span class="tl-dot re"></span>
+            </div>
+            <div class="tl-entry" data-reveal>
+              <span class="tl-dot rf"></span>
+              <div class="tl-card top">
+                <span class="tl-role"><span class="pt">Desenvolvedor Full-Stack</span><span class="en">Full-Stack Developer</span></span>
+                <span class="tl-org">Von Braun Labs - 2025</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 06 · CONTATO ==================== -->
+      <section id="panel-contato" class="panel panel-contato panel-bordered" data-nav-pt="06 · CONTATO" data-nav-en="06 · CONTACT">
+        <div class="glow glow-contato"></div>
+        <svg class="enso-contato" data-depth="0.1" width="660" height="660" viewBox="0 0 660 660" aria-hidden="true">
+          <circle cx="330" cy="330" r="280" pathLength="100" fill="none" stroke="rgba(233,235,220,0.09)" stroke-width="6" stroke-linecap="round" filter="url(#brush)"></circle>
+        </svg>
+
+        <div class="kanji" data-depth="0.14" aria-hidden="true">
+          <span class="kanji-glyph">縁</span>
+          <span class="kanji-cap"><span class="pt">en - conexão</span><span class="en">en - connection</span></span>
+        </div>
+
+        <div class="contato-inner">
+          <span class="contato-kicker" data-reveal><span class="pt">Contato</span><span class="en">Contact</span></span>
+          <h2 class="contato-title" data-reveal>
+            <span class="pt">Vamos <span class="stroke">conversar</span>.</span>
+            <span class="en">Let's <span class="stroke">talk</span>.</span>
+          </h2>
+          <a class="email-link" data-reveal href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a>
+          <span class="phone" data-reveal>(15) 98108-6187</span>
+          <div class="socials" data-reveal>
+            <a class="social-btn" data-magnetic href="https://www.linkedin.com/in/joao-paulo-yudi-pojo-kuchiki-95a5751a9/" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
+            <a class="social-btn" data-magnetic href="https://github.com/joao-paulo-yudi" target="_blank" rel="noopener">GitHub <span>↗</span></a>
+          </div>
+          <div class="footer-row" data-reveal>
+            <span class="copyright">© 2026 João Paulo Yudi</span>
+            <button class="back-start" data-goto="panel-hero">
+              <span class="pt">← Voltar ao início</span><span class="en">← Back to start</span>
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
-  <div class="galeria">
-    <div class="hidden">
-      <p class="projetos-titulo">
-        Projetos
-      </p>
+
+  <!-- ==================== nav fixa ==================== -->
+  <nav class="topnav">
+    <button class="brand" data-goto="panel-hero" aria-label="Voltar ao início">
+      <span class="brand-name">João Paulo Yudi</span>
+    </button>
+    <div class="nav-right">
+      <button class="nav-link" data-goto="panel-sobre"><span class="pt">Sobre</span><span class="en">About</span></button>
+      <button class="nav-link" data-goto="panel-p1"><span class="pt">Projetos</span><span class="en">Works</span></button>
+      <button class="nav-link" data-goto="panel-skills"><span class="pt">Habilidades</span><span class="en">Skills</span></button>
+      <button class="nav-link" data-goto="panel-trajetoria"><span class="pt">Trajetória</span><span class="en">Journey</span></button>
+      <button class="nav-link" data-goto="panel-contato"><span class="pt">Contato</span><span class="en">Contact</span></button>
+      <div class="lang-switch">
+        <button class="lang-btn on" id="lang-pt">PT</button>
+        <span class="lang-sep">·</span>
+        <button class="lang-btn" id="lang-en">EN</button>
+      </div>
     </div>
-    <section class="section1">
-      <div class="hidden">
-        <a href="paginas/projetos/controle-de-estoque.html">
-          <div class="img-hover">
-            <img src="midia/Projetos/Controle de Estoque/tela1.png" alt="Controle de Estoque" class="img-direita">
-            <div class="overlay">
-              <p class="titulo-proj">
-                Controle de Estoque
-              </p>
-              <p class="subtitulo-proj">
-                C#, .NET, SQL Server
-              </p>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="hidden">
-        <a href="paginas/projetos/sanitas.html">
-          <div class="img-hover">
-            <img src="midia/Projetos/Sanitas/tela1.png" alt="Sanitas" class="img-esquerda">
-            <div class="overlay">
-              <p class="titulo-proj">
-                Projeto Sanitas
-              </p>
-              <p class="subtitulo-proj">
-                HTML, CSS, JavaScript
-              </p>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="hidden">
-        <a href="paginas/projetos/reluzi.html">
-          <div class="img-hover">
-            <img src="midia/Projetos/Reluzi/tela1.jpg" alt="Reluzi" class="img-direita">
-            <div class="overlay">
-              <p class="titulo-proj">
-                Site Reluzi
-              </p>
-              <p class="subtitulo-proj">
-                WordPress
-              </p>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="hidden">
-        <a href="paginas/projetos/quiz-tech.html">
-          <div class="img-hover">
-            <img src="midia/Projetos/quiz-tech/1.jpeg" alt="Quiz-Tech" class="img-esquerda">
-            <div class="overlay">
-              <p class="titulo-proj">
-                Quiz Tech
-              </p>
-              <p class="subtitulo-proj">
-                Node.js
-              </p>
-            </div>
-          </div>
-        </a>
-      </div>
-    </section>
+  </nav>
+
+  <!-- indicador de seção -->
+  <div class="indicator-wrap">
+    <span id="section-indicator">01 · INÍCIO</span>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
-  <script src="js/scripts.js"></script>
+
+  <!-- barra de progresso -->
+  <div class="progress">
+    <div class="progress-line"></div>
+    <div id="progress-fill"></div>
+    <div class="ticks">
+      <button class="tick" data-tick="panel-hero" data-goto="panel-hero">
+        <span class="tick-line"></span>
+        <span class="tick-label"><span class="pt">Início</span><span class="en">Start</span></span>
+      </button>
+      <button class="tick" data-tick="panel-sobre" data-goto="panel-sobre">
+        <span class="tick-line"></span>
+        <span class="tick-label"><span class="pt">Sobre</span><span class="en">About</span></span>
+      </button>
+      <button class="tick" data-tick="panel-p1" data-goto="panel-p1">
+        <span class="tick-line"></span>
+        <span class="tick-label"><span class="pt">Projetos</span><span class="en">Works</span></span>
+      </button>
+      <button class="tick" data-tick="panel-skills" data-goto="panel-skills">
+        <span class="tick-line"></span>
+        <span class="tick-label"><span class="pt">Habilidades</span><span class="en">Skills</span></span>
+      </button>
+      <button class="tick" data-tick="panel-trajetoria" data-goto="panel-trajetoria">
+        <span class="tick-line"></span>
+        <span class="tick-label"><span class="pt">Trajetória</span><span class="en">Journey</span></span>
+      </button>
+      <button class="tick" data-tick="panel-contato" data-goto="panel-contato">
+        <span class="tick-line"></span>
+        <span class="tick-label"><span class="pt">Contato</span><span class="en">Contact</span></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="spacer"></div>
+
+  <script src="js/v3.js"></script>
 </body>
 
 </html>

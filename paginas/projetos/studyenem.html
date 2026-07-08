@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="StudyEnem - plataforma de estudos para o ENEM. TCC do bacharelado em Ciência da Computação, com Angular, C# .NET e Learning Analytics. Projeto de João Paulo Yudi.">
+  <link rel="shortcut icon" href="../../midia/favicon.ico" type="image/x-icon">
+  <title>StudyEnem - João Paulo Yudi</title>
+  <meta name="theme-color" content="#0B0F09">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="../../css/detail.css">
+</head>
+
+<body>
+  <!-- filtro de pincel sumi-ê -->
+  <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
+    <defs>
+      <filter id="brush" x="-30%" y="-30%" width="160%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.02 0.09" numOctaves="3" seed="7" result="t"></feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="t" scale="18"></feDisplacementMap>
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <nav class="topnav">
+    <a class="brand" href="../../index.html">
+      <span class="brand-name">João Paulo Yudi</span>
+    </a>
+    <a class="back" href="../../index.html#panel-p1">← Todos os projetos</a>
+  </nav>
+
+  <header class="p-hero">
+    <span class="kanji-glyph" aria-hidden="true">学</span>
+    <p class="kicker">TCC · Web App</p>
+    <h1 class="p-title">Study<span class="stroke">Enem</span><span class="dot">.</span></h1>
+    <svg class="brush-underline" width="240" height="16" viewBox="0 0 240 16" aria-hidden="true">
+      <path d="M4 9 C 70 4, 170 13, 236 7" pathLength="100" fill="none" stroke="#8CA85A" stroke-width="4" stroke-linecap="round" filter="url(#brush)" opacity="0.8"></path>
+    </svg>
+    <div class="tags">
+      <span class="tag hot">Angular</span>
+      <span class="tag hot">C# .NET</span>
+      <span class="tag ghost">Learning Analytics</span>
+    </div>
+    <p class="lead">
+      Plataforma de estudos para o ENEM desenvolvida como Trabalho de Conclusão de Curso do
+      bacharelado em Ciência da Computação. O front-end foi feito em Angular e o back-end em
+      C# com .NET. O grande diferencial é o uso de Learning Analytics: cada simulado alimenta
+      métricas de desempenho por área, recomendações inteligentes e planos de estudo priorizados
+      pela dificuldade do estudante. O projeto também envolveu pesquisas de campo para validar
+      a experiência com estudantes reais.
+    </p>
+    <div class="meta">
+      <div class="meta-item"><span class="k">Stack</span><span class="v">Angular · C# .NET</span></div>
+      <div class="meta-item"><span class="k">Método</span><span class="v">Learning Analytics · Pesquisa de campo</span></div>
+      <div class="meta-item"><span class="k">Ano</span><span class="v">2026</span></div>
+      <div class="meta-item"><span class="k">Contexto</span><span class="v">TCC - Bacharelado</span></div>
+    </div>
+  </header>
+
+  <main class="gallery">
+    <figure class="frame" data-reveal>
+      <img loading="lazy" src="../../midia/Projetos/StudyEnem/1.png" alt="Dashboard inicial do StudyEnem com resumo de desempenho e recomendação inteligente">
+      <figcaption>Dashboard - visão geral do desempenho e recomendações</figcaption>
+    </figure>
+    <figure class="frame" data-reveal>
+      <img loading="lazy" src="../../midia/Projetos/StudyEnem/2.png" alt="Tela de desempenho do StudyEnem com evolução, radar por área e histórico">
+      <figcaption>Learning Analytics - evolução, radar por área e histórico</figcaption>
+    </figure>
+    <figure class="frame" data-reveal>
+      <img loading="lazy" src="../../midia/Projetos/StudyEnem/3.png" alt="Plano de estudos do StudyEnem com tópicos priorizados por prioridade">
+      <figcaption>Plano de estudos - tópicos priorizados pelo desempenho</figcaption>
+    </figure>
+    <figure class="frame" data-reveal>
+      <img loading="lazy" src="../../midia/Projetos/StudyEnem/4.png" alt="Tela de resolução de um simulado do StudyEnem">
+      <figcaption>Simulado - resolução de questões por área</figcaption>
+    </figure>
+  </main>
+
+  <footer class="p-foot">
+    <div class="nextprev">
+      <a class="np prev" href="chamadopro.html">
+        <span class="np-k">← Anterior</span>
+        <span class="np-t">ChamadoPro</span>
+      </a>
+      <a class="np next" href="easyland-mes.html">
+        <span class="np-k">Próximo →</span>
+        <span class="np-t">Easyland MES</span>
+      </a>
+    </div>
+    <div class="foot-contact">
+      <a href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a>
+      <span>© 2026 João Paulo Yudi</span>
+    </div>
+  </footer>
+
+  <script src="../../js/detail.js"></script>
+</body>
+
+</html>

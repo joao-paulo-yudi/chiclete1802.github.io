@@ -1,11 +1,10 @@
 /* Play layer: J (the key that left the keyboard), the terminal, shortcuts, the keycap rain.
-   Everything here respects window.Motion: Off = still, X-ray = labelled. */
+   With reduced motion on, everything here holds still. */
 (function () {
   const root = document.documentElement;
   const isEN = () => root.classList.contains('lang-en');
   const T = (pt, en) => (isEN() ? en : pt);
-  const mode = () => (window.Motion ? window.Motion.mode : 'on');
-  const moving = () => mode() !== 'off';
+  const moving = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
   const ease = t => 1 - Math.pow(1 - t, 3);
@@ -22,8 +21,7 @@
   /* =========================================================
      1. J, the mascot
      ========================================================= */
-  const XRAY = 'J, the mascot · SVG on springs: hops between sections, chases the cursor, lands on the footer';
-  const box = el('div', { class: 'jkey', 'aria-hidden': 'true', 'data-xray-tool': 'code' });
+  const box = el('div', { class: 'jkey', 'aria-hidden': 'true' });
   const svg = el('svg:svg', { viewBox: '0 0 60 72', width: 60, height: 72 }, box);
   const gLegs = el('svg:g', { class: 'j-legs' }, svg);
   const legL = el('svg:path', {}, gLegs), legR = el('svg:path', {}, gLegs);
@@ -230,11 +228,10 @@
 
     if (!want) {
       if (J.shown) { J.shown = false; box.classList.remove('on'); J.state = 'hidden'; J.perch = null; }
-      if (box.hasAttribute('data-xray')) box.removeAttribute('data-xray');   // no X-ray label while J is off stage
       return;
     }
     if (!J.shown) {
-      J.shown = true; box.classList.add('on'); box.setAttribute('data-xray', XRAY);
+      J.shown = true; box.classList.add('on');
       const p = pickPerch();
       if (p) {
         const q = perchPoint(p);
@@ -317,7 +314,6 @@
     render();
   }
   requestAnimationFrame(tick);
-  window.Motion && window.Motion.on(md => { if (md === 'off' && J.state === 'chase') J.state = 'perch'; });
 
   /* =========================================================
      2. The terminal (T or ` to open, Esc to close)
@@ -344,7 +340,7 @@
     estoque: 'controle-de-estoque', 'controle-de-estoque': 'controle-de-estoque', sanitas: 'sanitas', reluzi: 'reluzi', 'quiz-tech': 'quiz-tech', quiztech: 'quiz-tech'
   };
   const SECS = { sobre: 'sobre', about: 'sobre', projetos: 'projetos', work: 'projetos', habilidades: 'habilidades', skills: 'habilidades', trajetoria: 'trajetoria', career: 'trajetoria', contato: 'contato', contact: 'contato', topo: 'top', top: 'top' };
-  const CMDS = ['help', 'whoami', 'ls', 'cd', 'open', 'cat', 'stack', 'email', 'lang', 'motion', 'sudo', 'clear', 'exit', 'cafe', 'coffee', 'date', 'echo', 'history', 'vim', 'konami', 'rm'];
+  const CMDS = ['help', 'whoami', 'ls', 'cd', 'open', 'cat', 'stack', 'email', 'lang', 'sudo', 'clear', 'exit', 'cafe', 'coffee', 'date', 'echo', 'history', 'vim', 'konami', 'rm'];
   const go = id => { closeTerm(); const t = document.getElementById(id); if (t) t.scrollIntoView({ behavior: moving() ? 'smooth' : 'auto' }); };
 
   const run = {
@@ -359,7 +355,6 @@
   stack             as ferramentas
   email             o caminho mais curto
   lang pt|en        idioma
-  motion on|off|xray
   clear · exit
 <span class="c">e alguns que não estão na lista.</span>`,
         `<span class="k">commands</span>
@@ -371,7 +366,6 @@
   stack             the tools
   email             the shortest route
   lang pt|en        language
-  motion on|off|xray
   clear · exit
 <span class="c">and a few that are not on the list.</span>`), 'pre');
     },
@@ -398,7 +392,6 @@
     stack() { print(`<span class="k">front</span>  Angular · React · JavaScript\n<span class="k">back</span>   C# · .NET · Node.js · SQL Server\n<span class="k">tools</span>  Docker · Git · Photoshop`, 'pre'); },
     email() { print(`<a class="s" href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a>  <span class="c">${T('clique para escrever', 'click to write')}</span>`); },
     lang(a) { const l = /en/.test(a) ? 'en' : /pt/.test(a) ? 'pt' : (isEN() ? 'pt' : 'en'); const b = document.querySelector(`[data-lang="${l}"]`); b && b.click(); print(l === 'en' ? 'language: english' : 'idioma: português'); },
-    motion(a) { const m = ['on', 'off', 'xray'].includes(a) ? a : null; if (m && window.Motion) { window.Motion.set(m); print('motion: ' + m); } else print('motion on|off|xray', 'err'); },
     sudo(a) {
       if (/(contratar|hire|contrata)/i.test(a || '')) {
         print(T('[sudo] senha para visitante: ********', '[sudo] password for visitor: ********'));
@@ -497,7 +490,6 @@
     }
     if (k === 't') { e.preventDefault(); openTerm(); return; }
     if (k === 'l') { const b = document.querySelector(`[data-lang="${isEN() ? 'pt' : 'en'}"]`); b && b.click(); }
-    if (k === 'm' && window.Motion) { const ms = ['on', 'off', 'xray']; window.Motion.set(ms[(ms.indexOf(window.Motion.mode) + 1) % 3]); }
   });
 
   /* keycap rain: 64 black keys fall, bounce, pile, and clear */

@@ -10,7 +10,6 @@ const stage = document.getElementById('stage');
 const canvas = document.getElementById('scene');
 const Q = new URLSearchParams(location.search);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const moving = () => !window.Motion || window.Motion.moving;
 
 /* ---------- renderer ---------- */
 let renderer;
@@ -623,7 +622,7 @@ new IntersectionObserver(es => { visible = es[es.length - 1].isIntersecting; }, 
 function frame(now) {
   const dt = Math.min(0.1, (now - last) / 1000); last = now;
   if (!visible) return;
-  const live = moving() && !reduced;
+  const live = !reduced;
   time += dt;
   progress = measure();
   const lerpK = first || !live ? 1 : 1 - Math.pow(0.0008, dt);   // smooth follow
@@ -714,11 +713,7 @@ addEventListener('resize', resize);
 new ResizeObserver(resize).observe(stage);
 document.fonts && document.fonts.ready.then(() => { texCode.userData.draw({ caret: true }); texTerm.userData.draw({ lines: termLines }); dirty = true; });
 texCode.userData.draw({ caret: true });
-staticTyping(!moving() || reduced);
-if (window.Motion) window.Motion.on(m => {
-  dirty = true;
-  if (m === 'off') { ci = 0; chi = CMDS[0].cmd.length; phase = 'type'; wait = 1.4; staticTyping(true); }
-});
+staticTyping(reduced);
 // debug switches for lighting checks (?dbg=noglass,nolights,noenv)
 {
   const D = (Q.get('dbg') || '').split(',');

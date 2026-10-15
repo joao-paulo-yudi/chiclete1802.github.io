@@ -2,7 +2,7 @@
    Scrub(opts)  — canvas + pre-extracted JPEG frames scrubbed by a scroll driver.
                   ImageBitmap sliding window (off-thread decode), lerped playhead, nearest-frame fallback.
    Loop(canvas, render) — a code-drawn loop: render(ctx, t, w, h, dpr). Runs only on screen and while
-                  Motion is not 'off'; in 'off' it paints one still frame (t = opts.still).
+                  motion is not reduced; otherwise it paints one still frame (t = opts.still).
    One shared rAF for everything. Dev contract: ?jump=<y> and window.__ready. */
 (function () {
   const Q = new URLSearchParams(location.search);
@@ -20,7 +20,6 @@
   }
   requestAnimationFrame(tick);
 
-  const moving = () => !window.Motion || window.Motion.moving;
 
   function Scrub(o) {
     const canvas = o.canvas, ctx = canvas.getContext('2d', { alpha: false });
@@ -134,7 +133,7 @@
       get t() { return t; },
       tick(dt) {
         if (!visible) return;
-        if (!moving() || reduced) {
+        if (reduced) {
           if (!paintedStill) { paint(opts.still ?? 0); paintedStill = true; }
           return;
         }

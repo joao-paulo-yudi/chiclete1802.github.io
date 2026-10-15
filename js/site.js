@@ -5,7 +5,7 @@
   const root = document.documentElement;
   const isEN = () => root.classList.contains('lang-en');
   const T = (pt, en) => (isEN() ? en : pt);
-  const moving = () => !window.Motion || window.Motion.moving;
+  const moving = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clamp01 = v => Math.max(0, Math.min(1, v));
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -71,10 +71,6 @@
     history.replaceState(null, '', '#' + id);
   });
 
-  /* ---------- phones: the motion pill steps aside while scrolling ---------- */
-  // the motion switch docks into the nav, so it never sits on content
-  const dock = () => { const pill = $('.ms-pill'), host = $('.nav-r'); if (pill && host && pill.parentElement !== host) host.insertBefore(pill, host.firstChild); };
-  dock(); setTimeout(dock, 0); document.addEventListener('DOMContentLoaded', dock);
 
   /* ---------- nav ---------- */
   const nav = $('#nav');
@@ -145,13 +141,12 @@
       }
       out.innerHTML = html + '<span class="caret"></span>' + (ghost ? `<span class="ghost">${ghost}</span>` : '');
     }
-    const w = widget($('#about-code'), {
+    widget($('#about-code'), {
       start() { if (!moving()) { shown = total; render(total); } },
       tick(dt) { if (shown >= total) return; shown = Math.min(total, shown + dt * 260); render(Math.floor(shown)); },
       lang() { toks = tokens(); total = toks.reduce((a, t) => a + t[1].length, 0); if (shown >= total - 40 || !moving()) shown = total; render(Math.floor(shown)); }
     });
     render(0);
-    if (window.Motion) Motion.on(m => { if (m === 'off' && w.started) { shown = total; render(total); } });
   })();
 
   /* =========================================================
@@ -210,7 +205,6 @@
     function still() { qi = 0; state = 'result'; build(); }
     widget(el.closest('.win'), { start() { moving() ? build() : still(); }, tick: dt => s.tick(dt), lang: build });
     still();
-    if (window.Motion) Motion.on(m => { if (m === 'off') still(); });
   })();
 
   /* =========================================================
@@ -438,7 +432,6 @@
     build();
     let rw = svg.clientWidth;
     new ResizeObserver(() => { if (Math.abs(svg.clientWidth - rw) > 40) { rw = svg.clientWidth; build(); } }).observe(svg);
-    if (window.Motion) Motion.on(m => { if (m === 'off') { drawn = true; edges.forEach(e => { e.path.style.transition = 'none'; e.path.style.strokeDashoffset = 0; }); pick(0); } });
   })();
 
   /* =========================================================
@@ -502,7 +495,6 @@
     }
     widget($('.win-git'), { scroll: () => paint(false), lang: build });
     build();
-    if (window.Motion) Motion.on(() => paint(true));
   })();
 
   /* =========================================================
@@ -547,7 +539,6 @@
       tick, lang() { if (!moving() || phase !== 'type') { const m = full(); show(m.f.length + m.s.length + m.b.length); } setStatus(status.classList.contains('sent') ? 'sent' : status.classList.contains('sending') ? 'sending' : ''); }
     });
     still();
-    if (window.Motion) Motion.on(md => { if (md === 'off') still(); });
   })();
 
   /* ---------- dev contract ---------- */

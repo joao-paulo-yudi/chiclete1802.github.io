@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>João Paulo Yudi · Desenvolvedor front-end</title>
-  <meta name="description" content="Portfólio de João Paulo Yudi, desenvolvedor front-end. Angular, React e JavaScript, com C#, .NET e Node quando o projeto pede back-end.">
+  <meta name="description" content="Portfólio de João Paulo Yudi, desenvolvedor front-end e full-stack. Angular, React e JavaScript, C#, .NET e Node no back-end, e um Lab de IA com busca semântica, previsão de entrega e agente com LLM.">
   <meta name="theme-color" content="#000000">
   <meta property="og:title" content="João Paulo Yudi · Desenvolvedor front-end">
   <meta property="og:description" content="Interfaces em Angular e React para fábricas, escolas e times de suporte.">
@@ -34,6 +34,7 @@
       <nav class="links" aria-label="Seções">
         <a href="#sobre"><span class="pt">Sobre</span><span class="en">About</span></a>
         <a href="#projetos"><span class="pt">Projetos</span><span class="en">Work</span></a>
+        <a href="#ia"><span class="pt">IA</span><span class="en">AI</span></a>
         <a href="#habilidades"><span class="pt">Habilidades</span><span class="en">Skills</span></a>
         <a href="#trajetoria"><span class="pt">Trajetória</span><span class="en">Career</span></a>
       </nav>
@@ -58,9 +59,9 @@
       <div class="scrim-side" data-beat="0.15,0.2,0.66,0.72" aria-hidden="true"></div>
       <!-- beat 0: hero -->
       <div class="beat beat-hero" data-beat="0,0.01,0.1,0.16">
-        <a class="pill" href="#projetos">
+        <a class="pill" href="#ia">
           <span class="pill-k">2026</span>
-          <span class="pt">Novo projeto: ChamadoPro</span><span class="en">New project: ChamadoPro</span>
+          <span class="pt">Novo: Lab de IA, rodando no navegador</span><span class="en">New: AI Lab, running in your browser</span>
           <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
         </a>
         <h1 class="display">João Paulo<br><em>Yudi</em></h1>
@@ -249,11 +250,66 @@
       </div>
     </section>
 
+    <!-- ============ LAB DE IA ============ -->
+    <section class="sec" id="ia">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">06 · <span class="pt">Lab de IA</span><span class="en">AI Lab</span><span class="kj" aria-hidden="true">智</span></span>
+          <h2 class="head"><span class="pt">IA para o que chega na porta.</span><span class="en">AI for what shows up at the door.</span></h2>
+          <p class="body narrow"><span class="pt">Três problemas de um app de delivery: achar o prato certo, prever quando ele chega e deixar um LLM orquestrar as duas coisas. Tudo roda no seu navegador, sem servidor, com dados de exemplo. Pode mexer.</span><span class="en">Three problems from a delivery app: finding the right dish, predicting when it arrives, and letting an LLM orchestrate both. Everything runs in your browser, no server, on sample data. Go ahead and play.</span></p>
+        </div>
+
+        <!-- busca semântica -->
+        <article class="proj lab" id="lab-search">
+          <div class="proj-copy">
+            <span class="mono idx">01 / 03</span>
+            <h3 class="proj-t"><span class="pt">Busca semântica</span><span class="en">Semantic search</span></h3>
+            <p class="body"><span class="pt">Você descreve a vontade, não o nome do prato. A consulta vira um vetor num espaço de conceitos (leve, picante, japonês, barato…) e o cardápio é ordenado por similaridade de cosseno. Negação (“sem carne”) e filtro de preço (“até R$ 30”) entram na mesma consulta.</span><span class="en">You describe the craving, not the dish name. The query becomes a vector in a concept space (light, spicy, Japanese, cheap…) and the menu is ranked by cosine similarity. Negation (“without meat”) and a price filter (“under R$30”) live in the same query.</span></p>
+            <ul class="tags"><li>Embeddings</li><li><span class="pt">Similaridade de cosseno</span><span class="en">Cosine similarity</span></li><li><span class="pt">Busca híbrida</span><span class="en">Hybrid search</span></li><li>JavaScript</li></ul>
+            <p class="lab-note mono"><span class="pt">// num sistema real, os vetores viriam de um modelo de embeddings e ficariam num índice vetorial (pgvector, FAISS)</span><span class="en">// in production the vectors would come from an embedding model and live in a vector index (pgvector, FAISS)</span></p>
+          </div>
+          <div class="win win-app">
+            <div class="win-bar"><i></i><i></i><i></i><span class="win-t"><span class="pt">lab / busca</span><span class="en">lab / search</span></span><span class="demo"><span class="pt">cardápio de exemplo · 21 pratos</span><span class="en">sample menu · 21 dishes</span></span></div>
+            <div class="win-body"><div class="ui ui-search" id="ui-search"></div></div>
+          </div>
+        </article>
+
+        <!-- previsão de entrega -->
+        <article class="proj flip lab" id="lab-eta">
+          <div class="proj-copy">
+            <span class="mono idx">02 / 03</span>
+            <h3 class="proj-t"><span class="pt">Previsão de entrega</span><span class="en">Delivery ETA</span></h3>
+            <p class="body"><span class="pt">Uma regressão linear treinada aqui mesmo, por gradiente descendente, em 600 entregas sintéticas. Separo treino e teste, acompanho o erro por época e mostro um intervalo, não só um número. Mexa na distância, na chuva e na fila do restaurante.</span><span class="en">A linear regression trained right here by gradient descent on 600 synthetic orders. I split train and test, track error per epoch and show a range, not just a number. Move the distance, the rain and the restaurant queue.</span></p>
+            <ul class="tags"><li><span class="pt">Regressão</span><span class="en">Regression</span></li><li><span class="pt">Gradiente descendente</span><span class="en">Gradient descent</span></li><li>RMSE · MAE</li><li><span class="pt">Treino/teste</span><span class="en">Train/test</span></li></ul>
+            <p class="lab-note mono"><span class="pt">// os dados têm um efeito que a reta não captura (chuva pesa mais em viagem longa). o erro que sobra é honesto.</span><span class="en">// the data hides an effect a straight line can’t capture (rain hurts more on long trips). the leftover error is honest.</span></p>
+          </div>
+          <div class="win win-app">
+            <div class="win-bar"><i></i><i></i><i></i><span class="win-t"><span class="pt">lab / eta</span><span class="en">lab / eta</span></span><span class="demo"><span class="pt">dados sintéticos</span><span class="en">synthetic data</span></span></div>
+            <div class="win-body"><div class="ui ui-eta" id="ui-eta"></div></div>
+          </div>
+        </article>
+
+        <!-- agente -->
+        <article class="proj wide lab" id="lab-agent">
+          <div class="proj-copy">
+            <span class="mono idx">03 / 03</span>
+            <h3 class="proj-t"><span class="pt">Agente de pedidos</span><span class="en">Ordering agent</span></h3>
+            <p class="body"><span class="pt">Um LLM com tool calling recebe o pedido em linguagem natural, chama a busca e o preditor acima como ferramentas, filtra pelo que cabe no prazo e no bolso e devolve JSON validado antes de responder. Aqui o raciocínio do LLM é um roteiro marcado; as chamadas, os números e a validação são reais.</span><span class="en">An LLM with tool calling takes the request in plain language, calls the search and the predictor above as tools, filters by time and budget, and returns validated JSON before it answers. Here the LLM’s reasoning is a labelled script; the calls, the numbers and the validation are real.</span></p>
+            <ul class="tags"><li>LLM</li><li>Tool calling</li><li>JSON Schema</li><li>Guardrails</li><li><span class="pt">Observabilidade</span><span class="en">Tracing</span></li></ul>
+          </div>
+          <div class="win win-app">
+            <div class="win-bar"><i></i><i></i><i></i><span class="win-t"><span class="pt">lab / agente</span><span class="en">lab / agent</span></span><span class="demo"><span class="pt">LLM simulado · ferramentas reais</span><span class="en">scripted LLM · real tools</span></span></div>
+            <div class="win-body"><div class="ui ui-agent" id="ui-agent"></div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
     <!-- ============ HABILIDADES ============ -->
     <section class="sec" id="habilidades">
       <div class="wrap">
         <div class="sec-head">
-          <span class="label">06 · <span class="pt">Habilidades</span><span class="en">Skills</span><span class="kj" aria-hidden="true">技</span></span>
+          <span class="label">07 · <span class="pt">Habilidades</span><span class="en">Skills</span><span class="kj" aria-hidden="true">技</span></span>
           <h2 class="head"><span class="pt">Cada ferramenta, ligada ao projeto onde eu usei.</span><span class="en">Every tool, wired to the project where I used it.</span></h2>
         </div>
         <div class="graph" id="graph">
@@ -267,7 +323,7 @@
     <section class="sec" id="trajetoria">
       <div class="wrap grid-2 grid-career">
         <div class="col-copy sticky">
-          <span class="label">07 · <span class="pt">Trajetória</span><span class="en">Career</span><span class="kj" aria-hidden="true">道</span></span>
+          <span class="label">08 · <span class="pt">Trajetória</span><span class="en">Career</span><span class="kj" aria-hidden="true">道</span></span>
           <h2 class="head"><span class="pt">Quatro anos, um commit por vez.</span><span class="en">Four years, one commit at a time.</span></h2>
           <p class="body"><span class="pt">Comecei no marketing, passei pela sala de aula e pelo suporte de TI. Hoje programo em tempo integral. A formação corre em paralelo.</span><span class="en">I started in marketing, then taught classes and worked in IT support. Now I code full time. School runs in parallel.</span></p>
           <dl class="legend">
@@ -287,7 +343,7 @@
     <section class="sec sec-cta" id="contato">
       <div class="wrap grid-2">
         <div class="col-copy">
-          <span class="label">08 · <span class="pt">Contato</span><span class="en">Contact</span></span>
+          <span class="label">09 · <span class="pt">Contato</span><span class="en">Contact</span></span>
           <h2 class="display display-cta"><span class="pt">Vamos <em>conversar.</em></span><span class="en">Let's <em>talk.</em></span></h2>
           <p class="body"><span class="pt">Vaga, freela ou uma ideia meio pronta. E‑mail é o caminho mais curto.</span><span class="en">A role, a freelance job or a half-baked idea. Email is the shortest route.</span></p>
           <a class="email" href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a>
@@ -331,6 +387,7 @@
 
   <script src="vendor/engine.js"></script>
   <script src="js/site.js"></script>
+  <script src="js/lab.js"></script>
   <script src="js/play.js"></script>
   <script type="module" src="js/scene.js"></script>
 </body>

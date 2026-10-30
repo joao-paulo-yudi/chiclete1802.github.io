@@ -117,6 +117,7 @@
         x('  agora'), p(': '), s('Full-Stack @ Von Braun Labs'), p(',\n'),
         x('  stack'), p(': ['), s('Angular'), p(', '), s('React'), p(', '), s('JavaScript'), p('],\n'),
         x('  backend'), p(': ['), s('C#'), p(', '), s('.NET'), p(', '), s('Node.js'), p(', '), s('SQL Server'), p('],\n'),
+        x('  ia'), p(': ['), s(T('LLMs via API', 'LLMs via API')), p(', '), s('tool calling'), p(', '), s(T('busca vetorial', 'vector search')), p('],\n'),
         x('  formacao'), p(': [\n'),
         p('    '), s(T('Ciência da Computação · IFSP · 12/2026', 'Computer Science · IFSP · 12/2026')), p(',\n'),
         p('    '), s(T('Desenv. de Sistemas · Etec · 11/2022', 'Systems Development · Etec · 11/2022')), p(',\n'),
@@ -362,9 +363,9 @@
     const svg = $('#graph-svg'), cap = $('#graph-cap');
     if (!svg) return;
     const NS = 'http://www.w3.org/2000/svg';
-    const SK = ['Angular', 'React', 'Java', 'C# · .NET', 'SQL Server', 'HTML · CSS', 'JavaScript', 'Node.js', 'SQLite', 'WordPress'];
-    const PR = ['Easyland MES', 'ChamadoPro', 'StudyEnem', ['Controle de Estoque', 'Inventory Control'], 'Sanitas', 'Quiz Tech', 'Reluzi'];
-    const E = [[0, 0], [0, 1], [0, 2], [1, 0], [2, 1], [3, 2], [3, 3], [4, 3], [5, 4], [6, 4], [6, 5], [7, 5], [8, 5], [9, 6]];
+    const SK = ['Angular', 'React', 'Java', 'C# · .NET', 'SQL Server', 'HTML · CSS', 'JavaScript', 'Node.js', 'SQLite', 'WordPress', 'LLMs · APIs', ['Machine Learning', 'Machine Learning'], ['Busca vetorial', 'Vector search']];
+    const PR = ['Easyland MES', 'ChamadoPro', 'StudyEnem', ['Controle de Estoque', 'Inventory Control'], 'Sanitas', 'Quiz Tech', 'Reluzi', ['Lab de IA', 'AI Lab']];
+    const E = [[0, 0], [0, 1], [0, 2], [1, 0], [2, 1], [3, 2], [3, 3], [4, 3], [5, 4], [6, 4], [6, 5], [6, 7], [7, 5], [8, 5], [9, 6], [10, 7], [11, 7], [12, 7]];
     const TOOLS = ['Git', 'Docker', 'Photoshop'];
     let mob = false, edges = [], skillNodes = [], projNodes = [], active = 0, hoverLock = false, pulses = [];
     const pname = p => Array.isArray(p) ? T(p[0], p[1]) : p;
@@ -393,7 +394,7 @@
         svg.appendChild(path);
         return { s, p, path, len: 0 };
       });
-      skillNodes = SK.map((s, i) => { const g = node(sx, sy(i), sw, s, 'skill'); g.addEventListener('mouseenter', () => { hoverLock = true; pick(i); }); g.addEventListener('mouseleave', () => { hoverLock = false; }); g.addEventListener('click', () => pick(i)); return g; });
+      skillNodes = SK.map((s, i) => { const g = node(sx, sy(i), sw, pname(s), 'skill'); g.addEventListener('mouseenter', () => { hoverLock = true; pick(i); }); g.addEventListener('mouseleave', () => { hoverLock = false; }); g.addEventListener('click', () => pick(i)); return g; });
       projNodes = PR.map((p, i) => node(px, py(i), pw, pname(p), 'proj'));
       // tools: a quiet row with no wires
       const ty = H - 2;
@@ -411,7 +412,7 @@
       const ps = new Set();
       edges.forEach(e => { const on = e.s === i; e.path.classList.toggle('on', on); if (on) ps.add(e.p); });
       projNodes.forEach((g, k) => g.classList.toggle('on', ps.has(k)));
-      cap.innerHTML = `<b>${esc(SK[i])}</b> → ${[...ps].map(k => esc(pname(PR[k]))).join(', ')}`;
+      cap.innerHTML = `<b>${esc(pname(SK[i]))}</b> → ${[...ps].map(k => esc(pname(PR[k]))).join(', ')}`;
       // pulses along lit edges
       pulses.forEach(p => p.c.remove());
       pulses = edges.filter(e => e.s === i).map(e => { const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); c.setAttribute('r', 3); c.setAttribute('class', 'g-pulse'); svg.appendChild(c); return { e, c, t: 0 }; });
@@ -540,6 +541,9 @@
     });
     still();
   })();
+
+  // shared with js/lab.js, which adds the AI lab windows to the same loop
+  window.JPY = { widget, seq, T, esc, moving, isEN };
 
   /* ---------- dev contract ---------- */
   const go = () => window.MotionEngine ? MotionEngine.ready() : (window.__ready = true);

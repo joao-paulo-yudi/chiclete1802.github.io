@@ -339,7 +339,7 @@
     studyenem: 'studyenem', 'easyland': 'easyland-mes', 'easyland-mes': 'easyland-mes', chamadopro: 'chamadopro',
     estoque: 'controle-de-estoque', 'controle-de-estoque': 'controle-de-estoque', sanitas: 'sanitas', reluzi: 'reluzi', 'quiz-tech': 'quiz-tech', quiztech: 'quiz-tech'
   };
-  const SECS = { sobre: 'sobre', about: 'sobre', projetos: 'projetos', work: 'projetos', habilidades: 'habilidades', skills: 'habilidades', trajetoria: 'trajetoria', career: 'trajetoria', contato: 'contato', contact: 'contato', topo: 'top', top: 'top' };
+  const SECS = { sobre: 'sobre', about: 'sobre', projetos: 'projetos', work: 'projetos', ia: 'ia', ai: 'ia', lab: 'ia', habilidades: 'habilidades', skills: 'habilidades', trajetoria: 'trajetoria', career: 'trajetoria', contato: 'contato', contact: 'contato', topo: 'top', top: 'top' };
   const CMDS = ['help', 'whoami', 'ls', 'cd', 'open', 'cat', 'stack', 'email', 'lang', 'sudo', 'clear', 'exit', 'cafe', 'coffee', 'date', 'echo', 'history', 'vim', 'konami', 'rm'];
   const go = id => { closeTerm(); const t = document.getElementById(id); if (t) t.scrollIntoView({ behavior: moving() ? 'smooth' : 'auto' }); };
 
@@ -349,7 +349,7 @@
         `<span class="k">comandos</span>
   whoami            quem é o João
   ls [projetos]     o que tem aqui
-  cd &lt;seção&gt;        sobre, projetos, habilidades, trajetoria, contato
+  cd &lt;seção&gt;        sobre, projetos, ia, habilidades, trajetoria, contato
   open &lt;projeto&gt;    abre o estudo de caso
   cat joao.ts       o resumo em código
   stack             as ferramentas
@@ -360,7 +360,7 @@
         `<span class="k">commands</span>
   whoami            who João is
   ls [projects]     what lives here
-  cd &lt;section&gt;      about, work, skills, career, contact
+  cd &lt;section&gt;      about, work, ai, skills, career, contact
   open &lt;project&gt;    opens the case study
   cat joao.ts       the summary, as code
   stack             the tools
@@ -372,13 +372,13 @@
     whoami() { print(T('visitante. o dono da casa é o João Paulo Yudi: dev front-end, Angular e React, Full-Stack na Von Braun Labs.', 'a visitor. The owner is João Paulo Yudi: front-end dev, Angular and React, Full-Stack at Von Braun Labs.')); },
     ls(a) {
       if (/^(projetos|projects|work)/.test(a)) print('studyenem/  easyland-mes/  chamadopro/  controle-de-estoque/  sanitas/  reluzi/  quiz-tech/', 'pre');
-      else print(T('sobre/  projetos/  habilidades/  trajetoria/  contato/  joao.ts', 'about/  work/  skills/  career/  contact/  joao.ts'), 'pre');
+      else print(T('sobre/  projetos/  ia/  habilidades/  trajetoria/  contato/  joao.ts', 'about/  work/  ai/  skills/  career/  contact/  joao.ts'), 'pre');
     },
     cd(a) {
       const k = (a || '').replace(/[\/~.]/g, '').toLowerCase();
       if (!k) return go('top');
       if (SECS[k]) return go(SECS[k]);
-      print(T(`cd: não achei "${esc(a)}". tente: sobre, projetos, habilidades, trajetoria, contato`, `cd: no "${esc(a)}" here. try: about, work, skills, career, contact`), 'err');
+      print(T(`cd: não achei "${esc(a)}". tente: sobre, projetos, ia, habilidades, trajetoria, contato`, `cd: no "${esc(a)}" here. try: about, work, ai, skills, career, contact`), 'err');
     },
     open(a) {
       const k = (a || '').replace(/\/$/, '').toLowerCase();
@@ -389,7 +389,7 @@
       if (/joao/.test(a || '')) print(document.getElementById('about-src') ? esc(document.getElementById('about-src').textContent || '') || T('o arquivo ainda está sendo digitado. role até Sobre.', 'still being typed. scroll to About.') : '', 'pre');
       else print(T(`cat: ${esc(a || '')}: arquivo não encontrado`, `cat: ${esc(a || '')}: no such file`), 'err');
     },
-    stack() { print(`<span class="k">front</span>  Angular · React · JavaScript\n<span class="k">back</span>   C# · .NET · Node.js · SQL Server\n<span class="k">tools</span>  Docker · Git · Photoshop`, 'pre'); },
+    stack() { print(`<span class="k">front</span>  Angular · React · JavaScript\n<span class="k">back</span>   C# · .NET · Node.js · SQL Server\n<span class="k">ia</span>     LLMs via API · tool calling · busca vetorial · ML\n<span class="k">tools</span>  Docker · Git · Photoshop`, 'pre'); },
     email() { print(`<a class="s" href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a>  <span class="c">${T('clique para escrever', 'click to write')}</span>`); },
     lang(a) { const l = /en/.test(a) ? 'en' : /pt/.test(a) ? 'pt' : (isEN() ? 'pt' : 'en'); const b = document.querySelector(`[data-lang="${l}"]`); b && b.click(); print(l === 'en' ? 'language: english' : 'idioma: português'); },
     sudo(a) {

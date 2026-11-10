@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>João Paulo Yudi · Engenheiro de software</title>
-<meta name="description" content="Portfólio de João Paulo Yudi, engenheiro de software full-stack em Sorocaba. Authentic, StudyENEM e Easyland explicados por dentro, com a arquitetura de cada sistema.">
+<meta name="description" content="João Paulo Yudi, engenheiro de software full-stack em Sorocaba, SP. Angular, React, C# e .NET. Trajetória, stack, projetos e contato.">
 <link rel="canonical" href="https://portfolio-jpy.vercel.app/">
-<meta name="theme-color" content="#0E0F0D">
+<meta name="theme-color" content="#E5E5E5">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="João Paulo Yudi">
 <meta property="og:title" content="João Paulo Yudi · Engenheiro de software">
-<meta property="og:description" content="Sistemas que viram rotina, explicados por dentro: Authentic, StudyENEM e Easyland.">
+<meta property="og:description" content="Engenheiro de software full-stack em Sorocaba, SP. Angular, React, C# e .NET.">
 <meta property="og:url" content="https://portfolio-jpy.vercel.app/">
 <meta property="og:image" content="https://portfolio-jpy.vercel.app/og.jpg">
 <meta property="og:image:secure_url" content="https://portfolio-jpy.vercel.app/og.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Uma lanterna de papel acesa no escuro, com o nome João Paulo Yudi">
+<meta property="og:image:alt" content="João Paulo Yudi, engenheiro de software">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://portfolio-jpy.vercel.app/og.jpg">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -26,333 +26,125 @@
 <link rel="icon" type="image/png" sizes="144x144" href="/icon-144.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="preload" as="font" type="font/woff2" href="fonts/newsreader.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/archivo.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="fonts/geist.woff2" crossorigin>
-<link rel="preload" as="image" href="img/hero/k1-1280.webp">
 <link rel="stylesheet" href="css/site.css">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"João Paulo Yudi Kuchiki","jobTitle":"Engenheiro de software","url":"https://portfolio-jpy.vercel.app/","email":"mailto:joaopaulokuchiki@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Sorocaba","addressRegion":"SP","addressCountry":"BR"},"alumniOf":["Instituto Federal de São Paulo","Etec Fernando Prestes"],"sameAs":["https://github.com/joao-paulo-yudi","https://www.linkedin.com/in/joao-paulo-yudi"]}</script>
 </head>
 <body>
-<a class="skip" href="#projetos" data-en="Skip to the work">Pular para os projetos</a>
-
-<div class="stage" id="stage" aria-hidden="true">
-  <canvas id="stageCanvas"></canvas>
-  <video id="stageVideo" src="media/lantern.mp4" poster="media/lantern-poster.jpg" muted playsinline loop preload="auto"></video>
-  <div class="shade" id="stageShade"></div>
-  <div class="grain"></div>
-  <div class="wash" id="stageWash"></div>
-  <div class="hanko" id="hanko"><span>縁</span></div>
-</div>
+<a class="skip" href="#sobre" data-en="Skip to content">Pular para o conteúdo</a>
+<canvas id="scene" aria-hidden="true"></canvas>
 
 <header class="top" id="top">
-  <div class="wrap">
-    <a class="brand" href="#inicio" aria-label="João Paulo Yudi, início">
-      <span class="seal" aria-hidden="true">縁</span>
-      <span><b>João Paulo Yudi</b><small data-en="Software engineer">Engenheiro de software</small></span>
-    </a>
-    <nav class="nav" aria-label="Principal">
-      <a href="#projetos" data-en="Work">Projetos</a>
-      <a class="hide-m" href="#outros" data-en="More">Outros</a>
-      <a class="hide-m" href="#sobre" data-en="About">Sobre</a>
-      <a href="#contato" data-en="Contact">Contato</a>
-      <button class="lang" id="lang" type="button" aria-label="Switch to English">EN</button>
-    </nav>
+  <a class="name" href="#inicio">João Paulo Yudi</a>
+  <nav class="pill" aria-label="Principal">
+    <a href="#sobre" data-en="About">Sobre</a>
+    <a href="#trajetoria" data-en="Experience">Trajetória</a>
+    <a href="#stack">Stack</a>
+    <a href="#projetos" data-en="Projects">Projetos</a>
+  </nav>
+  <div class="top-r">
+    <button class="lang" id="lang" type="button">EN</button>
+    <a class="btn dark" href="#contato" data-en="Contact">Contato</a>
   </div>
 </header>
 
 <main id="inicio">
-  <!-- ======== OPENING (dark, over the lantern) ======== -->
-  <div class="open" id="open" data-dark>
-    <section class="hero" id="hero">
-      <div class="wrap">
-        <p class="eyebrow mono rv"><i></i><span data-en="Portfolio · Sorocaba, Brazil · 2026">Portfólio · Sorocaba, SP · 2026</span></p>
-        <h1 class="rv d1"><span>João Paulo</span><span><em>Yudi</em></span></h1>
-        <p class="lede rv d2" data-en="Full-stack software engineer. I build systems that become routine: the toll gantry that reads a tag without stopping the car, the practice exam that writes your study plan, the screen an operator uses for a whole shift.">Engenheiro de software full-stack. Faço sistemas que viram rotina: o pórtico que lê a tag sem o carro parar, o simulado que monta o seu plano de estudos, a tela que o operador usa no turno inteiro.</p>
-        <div class="cta-row rv d3">
-          <a class="pill solid" href="#projetos"><span data-en="See the work">Ver projetos</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3v10M4 9l4 4 4-4"/></svg></a>
-          <a class="pill" href="#contato" data-en="Get in touch">Falar comigo</a>
+  <section class="hero" data-form="0" aria-labelledby="h1">
+    <div class="col">
+      <p class="tag mono rv" data-en="Software engineer · Sorocaba, Brazil">Engenheiro de software · Sorocaba, SP</p>
+      <h1 id="h1" class="display rv d1"><span>João</span><span>Paulo</span><span>Yudi</span></h1>
+      <p class="lead rv d2" data-en="Full-stack developer. I work with Angular, React, C# and .NET at Von Braun Labs, and I finish my Computer Science degree at IFSP in December 2026.">Desenvolvedor full-stack. Trabalho com Angular, React, C# e .NET na Von Braun Labs e termino Ciência da Computação no IFSP em dezembro de 2026.</p>
+      <div class="row rv d3">
+        <a class="btn dark" href="#projetos" data-en="Projects">Projetos</a>
+        <a class="btn ghost" href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a>
+      </div>
+    </div>
+    <ul class="facts mono rv d3" aria-label="Resumo">
+      <li><span>01</span><span data-en="Full-stack">Full-stack</span></li>
+      <li><span>02</span><span data-en="Angular · React · .NET">Angular · React · .NET</span></li>
+      <li><span>03</span><span data-en="Portuguese · English">Português · Inglês</span></li>
+    </ul>
+  </section>
+
+  <section class="sec" id="sobre" data-form="1" aria-labelledby="sobre-h">
+    <div class="col">
+      <div class="card rv">
+        <p class="tag mono" data-en="About">Sobre</p>
+        <h2 id="sobre-h" class="h2" data-en="Who I am">Quem sou</h2>
+        <p data-en="I'm João Paulo Yudi Kuchiki, from Sorocaba, São Paulo. I trained as a systems development technician, taught English and computing, and worked in IT support before moving into software full time.">Sou João Paulo Yudi Kuchiki, de Sorocaba, São Paulo. Me formei técnico em Desenvolvimento de Sistemas, dei aula de inglês e de informática e trabalhei com suporte de TI antes de ir para o desenvolvimento em tempo integral.</p>
+        <p data-en="Today I'm a software engineer at Von Braun Labs, working on the front end and back end of industrial and web platforms.">Hoje sou engenheiro de software na Von Braun Labs e trabalho no front-end e no back-end de plataformas industriais e web.</p>
+        <dl class="grid4">
+          <div><dt class="mono" data-en="Based in">Cidade</dt><dd>Sorocaba, SP</dd></div>
+          <div><dt class="mono" data-en="Now">Hoje</dt><dd>Von Braun Labs</dd></div>
+          <div><dt class="mono" data-en="Degree">Formação</dt><dd data-en="Computer Science, IFSP">Ciência da Computação, IFSP</dd></div>
+          <div><dt class="mono" data-en="Languages">Idiomas</dt><dd data-en="Portuguese, English">Português, inglês</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wide low" id="trajetoria" data-form="2" aria-labelledby="tr-h">
+    <div class="col">
+      <div class="card rv">
+        <p class="tag mono" data-en="Experience and education">Trajetória</p>
+        <h2 id="tr-h" class="h2" data-en="Experience">Experiência e formação</h2>
+        <ol class="time">
+          <li><span class="yr mono" data-en="2025 to now">2025 · atual</span><div><b data-en="Software engineer · Von Braun Labs">Engenheiro de software · Von Braun Labs</b><p data-en="ChipInventor, a cloud EDA platform; a MES for the shop floor; Authentic, a key management platform. Angular, React, C#, .NET and PostgreSQL.">ChipInventor, plataforma de EDA em nuvem; um MES para o chão de fábrica; Authentic, plataforma de gestão de chaves. Angular, React, C#, .NET e PostgreSQL.</p></div></li>
+          <li><span class="yr mono" data-en="Until 2026">Até 2026</span><div><b data-en="B.S. Computer Science · IFSP">Bacharelado em Ciência da Computação · IFSP</b><p data-en="Federal Institute of São Paulo, Salto campus. Expected December 2026.">Instituto Federal de São Paulo, campus Salto. Conclusão prevista para dezembro de 2026.</p></div></li>
+          <li><span class="yr mono">2024 · 2025</span><div><b data-en="Development intern · Jungux Tecnologia">Estágio em desenvolvimento · Jungux Tecnologia</b><p data-en="Features and fixes in web apps: chatbots, ticketing, backup management. Technical documentation for the team.">Funcionalidades e correções em aplicações web: chatbots, abertura de chamados, gestão de backups. Documentação técnica do time.</p></div></li>
+          <li><span class="yr mono" data-en="Before 2024">Antes de 2024</span><div><b data-en="English and computing teacher · IT support">Professor de inglês e informática · Suporte de TI</b><p data-en="Classes for students at different levels; hardware, software and database maintenance.">Aulas para alunos de vários níveis; manutenção de hardware, software e bancos de dados.</p></div></li>
+          <li><span class="yr mono">2022</span><div><b data-en="Systems Development technician · Etec Fernando Prestes">Técnico em Desenvolvimento de Sistemas · Etec Fernando Prestes</b></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wide low" id="stack" data-form="3" aria-labelledby="st-h">
+    <div class="col">
+      <div class="card rv">
+        <p class="tag mono">Stack</p>
+        <h2 id="st-h" class="h2" data-en="Tools">Ferramentas</h2>
+        <div class="stack">
+          <div><h3 class="mono">Front-end</h3><ul class="chips"><li class="m">Angular</li><li class="m">React</li><li>TypeScript</li><li>JavaScript</li><li>HTML</li><li>CSS</li><li>Three.js</li></ul></div>
+          <div><h3 class="mono">Back-end</h3><ul class="chips"><li class="m">C#</li><li class="m">.NET</li><li>ASP.NET Core</li><li>Entity Framework</li><li>Node.js</li><li>Express</li><li>Java</li></ul></div>
+          <div><h3 class="mono" data-en="Data">Dados</h3><ul class="chips"><li class="m">PostgreSQL</li><li>SQL Server</li><li>SQLite</li><li>Supabase</li></ul></div>
+          <div><h3 class="mono" data-en="Tools">Ferramentas</h3><ul class="chips"><li>Git</li><li>Docker</li><li>Vercel</li><li>Jira</li><li>Scrum</li><li>Figma</li></ul></div>
         </div>
       </div>
-      <div class="hint mono" aria-hidden="true"><span data-en="scroll">role</span><i></i></div>
-    </section>
+    </div>
+  </section>
 
-    <section class="en" id="en" aria-labelledby="en-h">
-      <div class="wrap">
-        <div class="grid">
-          <div class="kanji rv" aria-hidden="true">
-            <svg viewBox="0 0 240 240"><text class="ghost" x="10" y="205">縁</text><text class="draw" id="kanjiDraw" x="10" y="205">縁</text></svg>
-          </div>
-          <div class="rv d1">
-            <p class="mono reading" data-en="en · 縁 · the bond between things">en · 縁 · o laço entre as coisas</p>
-            <h2 id="en-h" data-en="Every system is made of connections.">Todo sistema é feito de ligações.</h2>
-            <p data-en="A screen talks to an API, the API respects a key, a queue never drops the event. When those links hold, nobody notices them. That is the part of the job I like most, and why this kanji is my signature.">Uma tela conversa com uma API, a API respeita uma chave, a fila não perde o evento. Quando essas ligações seguram, ninguém repara nelas. É a parte do trabalho de que eu mais gosto, e por isso esse kanji é a minha assinatura.</p>
-          </div>
-        </div>
+  <section class="sec right" id="projetos" data-form="4" aria-labelledby="pr-h">
+    <div class="col">
+      <div class="card rv">
+        <p class="tag mono" data-en="Projects">Projetos</p>
+        <h2 id="pr-h" class="h2" data-en="Selected work">Projetos</h2>
+        <p class="sub" data-en="Click a project to see what it is and how it is built.">Clique num projeto para ver o que é e como foi feito.</p>
+        <div class="proj" id="proj"></div>
       </div>
-    </section>
-    <div class="unfold"><div class="fold-line" id="foldLine"><div><p data-en="Unfolded, the paper becomes the page.">Desdobrado, o papel vira página.</p><span class="mono" data-en="the work starts here">o trabalho começa aqui</span></div></div></div>
-  </div>
+    </div>
+  </section>
 
-  <!-- ======== PAPER ======== -->
-  <div class="paper">
-    <section class="sec" id="projetos" aria-labelledby="proj-h">
-      <div class="wrap">
-        <p class="label mono rv"><span class="n">01</span><span data-en="Work">Projetos</span></p>
-        <h2 class="h-xl rv d1" id="proj-h" data-en="Three systems, opened up.">Três sistemas, abertos por dentro.</h2>
-        <p class="intro-p rv d2" data-en="Instead of a gallery of screenshots, the architecture. Each diagram draws itself as you read, in the order the data travels.">Em vez de uma galeria de capturas, a arquitetura. Cada diagrama se desenha enquanto você lê, na ordem em que os dados passam.</p>
-        <nav class="toc rv d3" aria-label="Projetos principais">
-          <a href="#authentic"><span class="no">01</span><span class="nm">Authentic</span><span class="ds" data-en="White-label key management for free-flow tolling">Gestão white-label de chaves para pedágio free-flow</span><span class="yr">2026</span></a>
-          <a href="#studyenem"><span class="no">02</span><span class="nm">StudyENEM</span><span class="ds" data-en="Learning Analytics for ENEM, my capstone">Learning Analytics para o ENEM, meu TCC</span><span class="yr">2026</span></a>
-          <a href="#easyland"><span class="no">03</span><span class="nm">Easyland</span><span class="ds" data-en="Microservice MES for a factory floor">MES em microsserviços para o chão de fábrica</span><span class="yr">2025</span></a>
-        </nav>
+  <section class="sec dark" id="contato" data-form="5" aria-labelledby="ct-h">
+    <div class="col">
+      <div class="rv">
+        <p class="tag mono" data-en="Contact">Contato</p>
+        <h2 id="ct-h" class="display small" data-en="Contact">Contato</h2>
+        <ul class="links">
+          <li><span class="mono">E-mail</span><a href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a></li>
+          <li><span class="mono">LinkedIn</span><a href="https://www.linkedin.com/in/joao-paulo-yudi" target="_blank" rel="noopener">linkedin.com/in/joao-paulo-yudi</a></li>
+          <li><span class="mono">GitHub</span><a href="https://github.com/joao-paulo-yudi" target="_blank" rel="noopener">github.com/joao-paulo-yudi</a></li>
+          <li><span class="mono" data-en="City">Cidade</span><span>Sorocaba, SP</span></li>
+        </ul>
       </div>
-    </section>
-
-    <!-- ===== AUTHENTIC ===== -->
-    <article class="sec chapter" id="authentic" aria-labelledby="au-h">
-      <header class="opener" data-dark>
-        <img decoding="async" class="op-img" src="img/open/authentic-1600.webp" srcset="img/open/authentic-1600.webp 1600w, img/open/authentic-2400.webp 2400w" sizes="100vw" alt="" loading="lazy">
-        <div class="op-shade"></div>
-        <div class="wrap">
-          <p class="mono op-no rv">{ 01 }</p>
-          <h2 class="op-name rv d1" id="au-h">Authentic</h2>
-          <p class="op-line rv d2" data-en="A white-label platform that keeps the keys behind free-flow tolling.">Uma plataforma white-label que guarda as chaves do pedágio free-flow.</p>
-        </div>
-      </header>
-      <div class="wrap">
-        <div class="ch-head">
-          <p class="ch-lede rv" data-en="A white-label platform for managing <mark>Key Management Entities (EGCs)</mark>: the instances that hold the cryptographic keys behind free-flow toll tags on São Paulo highways regulated by ARTESP. Each client gets its own isolated EGC, with its own database, VPN and keys. The Authentic console creates, configures and watches all of them.">Plataforma white-label para gerir <mark>Entidades Gestoras de Chaves (EGCs)</mark>: as instâncias que guardam as chaves criptográficas por trás das tags de pedágio free-flow nas rodovias paulistas reguladas pela ARTESP. Cada cliente recebe a própria EGC, isolada, com banco, VPN e chaves próprios. O console do Authentic cria, configura e acompanha todas elas.</p>
-          <ul class="meta rv d2">
-            <li><span data-en="Client">Cliente</span>Beontag</li>
-            <li><span data-en="Where">Onde</span>Von Braun Labs</li>
-            <li><span data-en="Role">Papel</span><em style="font-style:normal" data-en="Management console and the EGC creation flow">Console de gestão e fluxo de criação de EGCs</em></li>
-            <li><span data-en="Year">Ano</span>2026</li>
-          </ul>
-        </div>
-        <div class="stamps rv"><span class="stamp" style="--r:-2deg">Angular</span><span class="stamp" style="--r:1.5deg">TypeScript</span><span class="stamp" style="--r:-1deg">PostgreSQL</span><span class="stamp" style="--r:2deg">Docker · K8s</span><span class="stamp" style="--r:-1.5deg">RSA 2048</span><span class="stamp" style="--r:1deg">VPN</span></div>
-
-        <section class="fig">
-          <div class="fig-head"><h3 data-en="One console, many isolated EGCs">Um console, várias EGCs isoladas</h3><span class="mono" data-en="fig. 1 · architecture">fig. 1 · arquitetura</span></div>
-          <div class="diagram" data-diagram="authentic"></div>
-          <ol class="notes" data-notes="authentic">
-            <li data-n="1"><b><i>01</i><span data-en="Console">Console</span></b><span data-en="One panel for every EGC: list, filter, stage (staging or production) and health of each one.">Um painel para todas as EGCs: lista, filtros, estágio (homologação ou produção) e saúde de cada uma.</span></li>
-            <li data-n="2"><b><i>02</i><span data-en="Provisioning">Provisionamento</span></b><span data-en="Creating an EGC spins up a new instance on Docker or Kubernetes, with the web services image, a size (S, M or L), its own PostgreSQL, a VPN subnet and a public address.">Criar uma EGC sobe uma instância nova em Docker ou Kubernetes, com a imagem dos webservices, um tamanho (P, M ou G), PostgreSQL próprio, sub-rede de VPN e endereço público.</span></li>
-            <li data-n="3"><b><i>03</i><span data-en="Organization">Organização</span></b><span data-en="<code>region</code>, <code>application_type</code>, <code>company</code> and the agreements (<code>agreement</code>, <code>agreement_rule</code>) that say who shares keys with whom, per region and application.">Tabelas <code>region</code>, <code>application_type</code>, <code>company</code> e os acordos (<code>agreement</code>, <code>agreement_rule</code>) que dizem quem compartilha chaves com quem, por região e por aplicação.</span></li>
-            <li data-n="4"><b><i>04</i><span data-en="Equipment">Equipamentos</span></b><span data-en="SLTs (lane equipment run by the toll operator) and ECTs (stations that personalize tags) reach the EGC through the VPN. Each one has a certificate, a public key and an MCR module.">SLTs (equipamentos de pista da concessionária) e ECTs (estações que personalizam as tags) falam com a EGC pela VPN. Cada um tem certificado, chave pública e um módulo MCR.</span></li>
-            <li data-n="5"><b><i>05</i><span data-en="Ranges and group keys">Faixas e chaves de grupo</span></b><span data-en="TID, OBUID and GID ranges, plus the group keys SLTs download. Keys are always masked on screen; leaving the field empty keeps the current key.">Faixas de TID, OBUID e GID e as chaves de grupo que os SLTs baixam. As chaves aparecem sempre mascaradas, e deixar o campo vazio mantém a chave atual.</span></li>
-            <li data-n="6"><b><i>06</i><span data-en="Platform key">Chave da plataforma</span></b><span data-en="An RSA 2048 pair generated at provisioning. The private key stays encrypted and never shows on a screen; the public key goes to SLTs, ECTs and apps.">Par RSA 2048 gerado no provisionamento. A chave privada fica cifrada e nunca aparece numa tela; a pública vai para SLTs, ECTs e apps.</span></li>
-          </ol>
-        </section>
-
-        <section class="fig">
-          <div class="fig-head"><h3 data-en="Creating an EGC, in the order of the seed script">Criar uma EGC, na ordem do script de população</h3><span class="mono" data-en="fig. 2 · flow">fig. 2 · fluxo</span></div>
-          <ol class="steps" data-steps>
-            <li><div class="sn">1</div><div class="st">EGC</div><div class="sd" data-en="name, slug, stage, starting point">nome, slug, estágio, ponto de partida</div></li>
-            <li><div class="sn">2</div><div class="st" data-en="Infrastructure">Infraestrutura</div><div class="sd" data-en="Docker or K8s, image, VPN">Docker ou K8s, imagem, VPN</div></li>
-            <li><div class="sn">3</div><div class="st" data-en="Platform">Plataforma</div><div class="sd" data-en="RSA pair, session timeout">par RSA, timeout de sessão</div></li>
-            <li><div class="sn">4</div><div class="st" data-en="Organization">Organização</div><div class="sd">region, company, agreement</div></li>
-            <li><div class="sn">5</div><div class="st" data-en="Equipment">Equipamentos</div><div class="sd">vpn_cert, slt, ect, mcr</div></li>
-            <li><div class="sn">6</div><div class="st">Tags</div><div class="sd" data-en="models, scopes, lots">modelos, escopos, lotes</div></li>
-            <li><div class="sn">7</div><div class="st" data-en="Ranges and keys">Faixas e chaves</div><div class="sd">tid, obuid, group_key</div></li>
-            <li><div class="sn">8</div><div class="st" data-en="Review">Revisão</div><div class="sd" data-en="checks, run order, SQL">verificações, ordem, SQL</div></li>
-          </ol>
-          <div class="split" style="margin-top:56px">
-            <div class="prose rv">
-              <h4 data-en="Why white-label">Por que white-label</h4>
-              <p data-en="The same product serves several operators. What changes from one client to another is data, not code: the owning company (<code>CURRENT_COMPANY</code>), regions, ranges and agreements. So every EGC is born from one template, and the console treats them all the same way.">O mesmo produto atende vários operadores. O que muda de um cliente para outro é dado, não código: a empresa titular (<code>CURRENT_COMPANY</code>), regiões, faixas e acordos. Por isso toda EGC nasce do mesmo template, e o console trata todas do mesmo jeito.</p>
-            </div>
-            <div class="prose rv d1">
-              <h4 data-en="Guard rails in the flow">Travas no caminho</h4>
-              <p data-en="You cannot move on without at least one region, one application type and one company. Sample data (seed G05) is blocked in production, because its keys are fictional and public. The review lists the run order: schema G01 to G04, alignment, the 18 tables, sequences and COMMIT.">Não dá para avançar sem pelo menos uma região, um tipo de aplicação e uma empresa. Os dados de exemplo (seed G05) ficam bloqueados em produção, porque as chaves dele são fictícias e públicas. A revisão mostra a ordem de execução: schema G01 a G04, alinhamento, as 18 tabelas, sequences e COMMIT.</p>
-            </div>
-          </div>
-        </section>
-
-        <div class="figures">
-          <div class="rv"><strong>8</strong><span data-en="steps to provision an EGC, from name to review">etapas para provisionar uma EGC, do nome à revisão</span></div>
-          <div class="rv d1"><strong>18</strong><span data-en="tables filled in the seed order, with their checks">tabelas preenchidas na ordem do script, com as verificações de cada uma</span></div>
-          <div class="rv d2"><strong>0</strong><span data-en="private keys shown on any screen">chaves privadas exibidas em qualquer tela</span></div>
-        </div>
-      </div>
-    </article>
-
-    <!-- ===== STUDYENEM ===== -->
-    <article class="sec chapter" id="studyenem" aria-labelledby="se-h">
-      <header class="opener" data-dark>
-        <img decoding="async" class="op-img" src="img/open/studyenem-1600.webp" srcset="img/open/studyenem-1600.webp 1600w, img/open/studyenem-2400.webp 2400w" sizes="100vw" alt="" loading="lazy">
-        <div class="op-shade"></div>
-        <div class="wrap">
-          <p class="mono op-no rv">{ 02 }</p>
-          <h2 class="op-name rv d1" id="se-h">StudyENEM</h2>
-          <p class="op-line rv d2" data-en="My capstone: a study plan written by your own mistakes.">Meu TCC: um plano de estudos escrito pelos seus próprios erros.</p>
-        </div>
-      </header>
-      <div class="wrap">
-        <div class="ch-head">
-          <p class="ch-lede rv" data-en="A practice exam platform for ENEM built on <mark>Learning Analytics</mark>. The student takes the exam, the platform measures where they miss and hands back a study plan that puts those topics first. It was my Computer Science capstone: designed with real students, then evaluated with experts.">Plataforma de simulados do ENEM baseada em <mark>Learning Analytics</mark>. O estudante faz a prova, a plataforma mede onde ele erra e devolve um plano de estudos que coloca esses conteúdos na frente. Foi o meu TCC de Ciência da Computação: desenhado com estudantes reais e avaliado com especialistas.</p>
-          <ul class="meta rv d2">
-            <li><span data-en="Context">Contexto</span><em style="font-style:normal" data-en="Capstone, B.S. Computer Science, IFSP Salto">TCC, Ciência da Computação, IFSP Salto</em></li>
-            <li><span data-en="Role">Papel</span><em style="font-style:normal" data-en="Research, design, front end and back end">Pesquisa, design, front-end e back-end</em></li>
-            <li><span data-en="Method">Método</span><em style="font-style:normal" data-en="User-Centered Design and Learning Analytics">Design Centrado no Usuário e Learning Analytics</em></li>
-            <li><span data-en="Code">Código</span><a href="https://github.com/joao-paulo-yudi/StudyENEM" target="_blank" rel="noopener">github.com/joao-paulo-yudi/StudyENEM</a></li>
-          </ul>
-        </div>
-        <div class="stamps rv"><span class="stamp" style="--r:1.5deg">Angular 17</span><span class="stamp" style="--r:-2deg">ASP.NET Core 8</span><span class="stamp" style="--r:1deg">EF Core</span><span class="stamp" style="--r:-1deg">PostgreSQL 16</span><span class="stamp" style="--r:2deg">JWT</span><span class="stamp" style="--r:-1.5deg">Docker</span></div>
-
-        <section class="fig">
-          <div class="fig-head"><h3 data-en="From an answer to a score, in one request">Da resposta à nota, numa requisição</h3><span class="mono" data-en="fig. 3 · architecture">fig. 3 · arquitetura</span></div>
-          <div class="diagram" data-diagram="studyenem"></div>
-          <ol class="notes" data-notes="studyenem">
-            <li data-n="1"><b><i>01</i>Angular 17</b><span data-en="Standalone components and Chart.js. Features: exam, result, performance, plan, question bank. A JWT interceptor signs every call.">Componentes standalone e Chart.js. Telas de simulado, resultado, desempenho, plano e questões. Um interceptor assina cada chamada com o JWT.</span></li>
-            <li data-n="2"><b><i>02</i>nginx</b><span data-en="Serves the SPA and forwards <code>/api</code> and <code>/midia</code> to the back end. One entry point, inside Docker Compose.">Serve o SPA e encaminha <code>/api</code> e <code>/midia</code> ao back-end. Uma porta de entrada só, dentro do Docker Compose.</span></li>
-            <li data-n="3"><b><i>03</i>ASP.NET Core 8</b><span data-en="Five controllers: Auth, Questions, Attempts, Dashboard and StudyPlan. Each student can only read their own data.">Cinco controllers: Auth, Questions, Attempts, Dashboard e StudyPlan. Cada estudante só acessa os próprios dados.</span></li>
-            <li data-n="4"><b><i>04</i><span data-en="Services">Serviços</span></b><span data-en="<code>ExamService</code> builds the exam, <code>TriScorer</code> estimates the IRT score, <code>PerformanceCalculator</code> computes the metrics, <code>StudyPlanService</code> ranks topics by difficulty.">O <code>ExamService</code> monta a prova, o <code>TriScorer</code> estima a nota pela TRI, o <code>PerformanceCalculator</code> calcula as métricas e o <code>StudyPlanService</code> ordena os conteúdos pela dificuldade.</span></li>
-            <li data-n="5"><b><i>05</i>PostgreSQL 16</b><span data-en="Schema and question bank created by EF Core migrations: the full ENEM 2022 exam, with official answer key and IRT parameters.">Schema e banco de questões criados por migrations do EF Core: a prova completa do ENEM 2022, com gabarito oficial e parâmetros da TRI.</span></li>
-            <li data-n="6"><b><i>06</i><span data-en="INEP importer">Importador INEP</span></b><span data-en="A Python tool reads public INEP data and writes the load script and question images. Google sign-in is optional, validated by the back end.">Uma ferramenta em Python lê os dados públicos do INEP e gera o script de carga e as imagens das questões. O login com Google é opcional e validado no back-end.</span></li>
-          </ol>
-        </section>
-
-        <section class="fig">
-          <div class="fig-head"><h3 data-en="The Learning Analytics loop">O ciclo de Learning Analytics</h3><span class="mono" data-en="fig. 4 · after Campbell and Oblinger">fig. 4 · segundo Campbell e Oblinger</span></div>
-          <div class="split">
-            <div class="cycle" data-cycle></div>
-            <div class="prose rv">
-              <h4 data-en="Five steps, one per screen">Cinco etapas, uma por tela</h4>
-              <p data-en="&lt;b&gt;Capture&lt;/b&gt;: every answer and the time spent on it. &lt;b&gt;Report&lt;/b&gt;: the dashboard shows hit rate per area and per topic, and the trend over time. &lt;b&gt;Predict&lt;/b&gt;: an estimated score using IRT, the same three-parameter model ENEM uses. &lt;b&gt;Act&lt;/b&gt;: a study plan ranked by a difficulty index per topic, with suggested hours, videos and a weekly schedule. &lt;b&gt;Refine&lt;/b&gt;: the next practice exam closes the loop."><b>Capturar</b>: cada resposta e o tempo gasto nela. <b>Reportar</b>: o dashboard mostra a taxa de acerto por área e por conteúdo, e a evolução no tempo. <b>Predizer</b>: a nota estimada pela TRI, com o mesmo modelo de três parâmetros do ENEM. <b>Agir</b>: um plano de estudos ordenado pelo índice de dificuldade de cada conteúdo, com horas sugeridas, videoaulas e cronograma semanal. <b>Refinar</b>: o próximo simulado fecha o ciclo.</p>
-              <h4 style="margin-top:34px" data-en="The academic part">A parte acadêmica</h4>
-              <p data-en="It went through one full User-Centered Design cycle: literature review and requirements, persona and user journey, prototypes, then a heuristic evaluation with experts and a post-test questionnaire with the SAM scale. Compared with related work, it is the only one joining all five pillars below.">Passou por um ciclo completo de Design Centrado no Usuário: revisão da literatura e requisitos, persona e jornada, protótipos, e depois avaliação heurística com especialistas e questionário pós-teste com a escala SAM. Comparado aos trabalhos relacionados, é o único que junta os cinco pilares abaixo.</p>
-              <table class="compare">
-                <thead><tr><th data-en="Work">Trabalho</th><th data-en="Exams">Simulados</th><th>Dashboard</th><th data-en="Plan">Plano</th><th>LA</th><th>UCD</th></tr></thead>
-                <tbody>
-                  <tr><td>Rosa (2023)</td><td class="y">●</td><td class="no-">○</td><td class="no-">○</td><td class="no-">○</td><td class="no-">○</td></tr>
-                  <tr><td>Rezende e Lopes (2025)</td><td class="y">●</td><td class="y">●</td><td class="no-">◐</td><td class="no-">○</td><td class="no-">○</td></tr>
-                  <tr class="me"><td>StudyENEM</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <div class="figures">
-          <div class="rv"><strong>185</strong><span data-en="questions from the full ENEM 2022 exam, with 925 options">questões da prova completa do ENEM 2022, com 925 alternativas</span></div>
-          <div class="rv d1"><strong>58</strong><span data-en="topics covered by the study plan, each with its own materials">conteúdos cobertos pelo plano de estudos, cada um com seus materiais</span></div>
-          <div class="rv d2"><strong>48</strong><span data-en="official ENEM scores used to validate the IRT model in the tests">notas oficiais do ENEM usadas para validar o modelo da TRI nos testes</span></div>
-        </div>
-
-      </div>
-    </article>
-
-    <!-- ===== EASYLAND ===== -->
-    <article class="sec chapter" id="easyland" aria-labelledby="ea-h">
-      <header class="opener" data-dark>
-        <img decoding="async" class="op-img" src="img/open/easyland-1600.webp" srcset="img/open/easyland-1600.webp 1600w, img/open/easyland-2400.webp 2400w" sizes="100vw" alt="" loading="lazy">
-        <div class="op-shade"></div>
-        <div class="wrap">
-          <p class="mono op-no rv">{ 03 }</p>
-          <h2 class="op-name rv d1" id="ea-h">Easyland</h2>
-          <p class="op-line rv d2" data-en="A factory floor split into services, and the two screens people touch.">Um chão de fábrica dividido em serviços, e as duas telas que as pessoas tocam.</p>
-        </div>
-      </header>
-      <div class="wrap">
-        <div class="ch-head">
-          <p class="ch-lede rv" data-en="A <mark>Manufacturing Execution System</mark> split into services. I built the two ends people touch: the React dashboard for management, and the Angular app operators use on a tablet, on the factory floor, with gloves on.">Um <mark>MES (sistema de execução da manufatura)</mark> dividido em serviços. Eu fiz as duas pontas que as pessoas tocam: o painel em React para a gestão e o app em Angular que o operador usa no tablet, no chão de fábrica, de luva.</p>
-          <ul class="meta rv d2">
-            <li><span data-en="Sector">Setor</span><em style="font-style:normal" data-en="Agricultural parts factory">Fábrica de peças agrícolas</em></li>
-            <li><span data-en="Role">Papel</span><em style="font-style:normal" data-en="Both front ends: React dashboard and Angular operator app">As duas pontas: painel em React e app do operador em Angular</em></li>
-            <li><span data-en="Type">Tipo</span><em style="font-style:normal" data-en="MES in microservices">MES em microsserviços</em></li>
-            <li><span data-en="Year">Ano</span>2025</li>
-          </ul>
-        </div>
-        <div class="stamps rv"><span class="stamp" style="--r:-1.5deg">React</span><span class="stamp" style="--r:2deg">Angular</span><span class="stamp" style="--r:-1deg">TypeScript</span><span class="stamp" style="--r:1deg">API Gateway</span><span class="stamp" style="--r:-2deg" data-en="Events">Eventos</span></div>
-
-        <section class="fig">
-          <div class="fig-head"><h3 data-en="One scrap entry, from a tap to the dashboard">Um refugo, do toque ao painel</h3><span class="mono" data-en="fig. 5 · architecture">fig. 5 · arquitetura</span></div>
-          <div class="diagram" data-diagram="easyland"></div>
-          <ol class="notes" data-notes="easyland">
-            <li data-n="1"><b><i>01</i>UI</b><span data-en="Two apps over the same services. Operator: big targets, few steps, works on a tablet. Dashboard: quality, production KPIs, forecasts and delays.">Dois apps sobre os mesmos serviços. Operador: alvos grandes, poucos passos, feito para tablet. Painel: qualidade, KPIs de produção, previsões e atrasos.</span></li>
-            <li data-n="2"><b><i>02</i>Gateway</b><span data-en="The single door. Checks the token, routes each call to its service and pushes live updates back to the dashboard.">A porta única. Confere o token, roteia cada chamada para o serviço certo e devolve as atualizações ao vivo para o painel.</span></li>
-            <li data-n="3"><b><i>03</i>Orchestrator</b><span data-en="Runs the life of a production order: release, steps, logging, inspection, close. If a step fails, it undoes what came before.">Conduz a vida de uma ordem de produção: liberar, etapas, apontamento, inspeção e encerramento. Se uma etapa falha, desfaz o que veio antes.</span></li>
-            <li data-n="4"><b><i>04</i><span data-en="Services">Serviços</span></b><span data-en="Production (orders and steps), Quality (inspection and scrap), Traceability (each part's history) and Telemetry (machine sensors). Each owns its own database.">Produção (ordens e etapas), Qualidade (inspeção e refugo), Rastreabilidade (a história de cada peça) e Telemetria (sensores das máquinas). Cada um com o próprio banco.</span></li>
-            <li data-n="5"><b><i>05</i><span data-en="Event broker">Broker de eventos</span></b><span data-en="Services do not call each other. They publish facts, like <code>scrap.logged</code>, and whoever cares reacts.">Os serviços não chamam uns aos outros. Eles publicam fatos, como <code>refugo.registrado</code>, e quem se interessa reage.</span></li>
-            <li data-n="6"><b><i>06</i><span data-en="The path">O caminho</span></b><span data-en="Tap on Scrap, gateway, orchestrator, Quality writes and publishes, Traceability links it to the part and the lot, the dashboard updates the indicator.">Toque em Refugo, gateway, orchestrator, a Qualidade grava e publica, a Rastreabilidade liga ao lote e à peça, o painel atualiza o indicador.</span></li>
-          </ol>
-          <p class="mono" style="color:var(--ink-3);margin-top:22px" data-en="Simplified view with generic names, no client details.">Visão simplificada, com nomes genéricos e sem detalhes do cliente.</p>
-        </section>
-
-        <div class="figures">
-          <div class="rv"><strong>15<small>→</small>2</strong><span data-en="minutes to log an inspection on the shop floor">minutos para registrar uma inspeção no chão de fábrica</span></div>
-          <div class="rv d1"><strong>50+</strong><span data-en="operators using the screens every shift">operadores usando as telas em cada turno</span></div>
-          <div class="rv d2"><strong>2</strong><span data-en="front ends, React and Angular, over the same services">front-ends, React e Angular, sobre os mesmos serviços</span></div>
-        </div>
-
-      </div>
-    </article>
-
-    <!-- ===== OTHERS (fan) ===== -->
-    <section class="sec others" id="outros" aria-labelledby="ot-h">
-      <div class="wrap">
-        <p class="label mono rv"><span class="n">02</span><span data-en="More work">Outros projetos</span></p>
-        <h2 class="h-xl rv d1" id="ot-h" data-en="Sites for people down the street.">Sites para quem está na rua de baixo.</h2>
-        <p class="intro-p rv d2" data-en="Tow truck, pet shop, sand courts, a fashion store. Drag the fan or use the arrows.">Guincho, pet shop, quadras de areia, loja de roupa. Arraste o leque ou use as setas.</p>
-        <div class="fan-wrap" id="fanWrap" tabindex="0" aria-roledescription="carrossel" aria-label="Outros projetos">
-          <div class="fan" id="fan"></div>
-        </div>
-        <div class="fan-info" aria-live="polite">
-          <div><h3 id="fanName"></h3><p id="fanDesc"></p><p class="mono" id="fanMeta"></p></div>
-          <div class="fan-ctl">
-            <button type="button" id="fanPrev" aria-label="Anterior"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 3 5 8l5 5"/></svg></button>
-            <span class="fan-count" id="fanCount">1 / 6</span>
-            <button type="button" id="fanNext" aria-label="Próximo"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m6 3 5 5-5 5"/></svg></button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== ABOUT ===== -->
-    <section class="sec about" id="sobre" aria-labelledby="ab-h">
-      <div class="wrap">
-        <p class="label mono rv"><span class="n">03</span><span data-en="About">Sobre</span></p>
-        <div class="split">
-          <div>
-            <h2 class="rv d1" id="ab-h" data-en="Technician, teacher for a while, engineer now.">Técnico, professor por um tempo, engenheiro agora.</h2>
-            <p class="intro-p rv d2" data-en="I'm João Paulo Yudi, from Sorocaba. I taught English and computing, worked in IT support, and today I build software at Von Braun Labs. Teaching left a habit: I write code thinking about who will read it, and screens thinking about who will use them.">Sou João Paulo Yudi, de Sorocaba. Dei aula de inglês e de informática, trabalhei com suporte de TI e hoje faço software na Von Braun Labs. Dar aula deixou um hábito: escrevo código pensando em quem vai ler e telas pensando em quem vai usar.</p>
-            <div class="skills rv d3"><span class="stamp" style="--r:-1deg">Angular</span><span class="stamp" style="--r:1.5deg">React</span><span class="stamp" style="--r:-2deg">TypeScript</span><span class="stamp" style="--r:1deg">C# · .NET</span><span class="stamp" style="--r:-1.5deg">Node.js</span><span class="stamp" style="--r:2deg">PostgreSQL</span><span class="stamp" style="--r:-1deg">Docker</span><span class="stamp" style="--r:1deg" data-en="English, fluent">Inglês fluente</span></div>
-          </div>
-          <ol class="timeline" id="timeline">
-            <span class="rail"><i></i></span>
-            <li><span class="y">2022</span><b data-en="Systems Development technician">Técnico em Desenvolvimento de Sistemas</b><p>Etec Fernando Prestes</p></li>
-            <li><span class="y">2024</span><b data-en="Development intern">Estágio em desenvolvimento</b><p data-en="Jungux Tecnologia · chatbots, ticketing, backups">Jungux Tecnologia · chatbots, chamados, backups</p></li>
-            <li><span class="y">2025</span><b data-en="Software engineer">Engenheiro de software</b><p data-en="Von Braun Labs · ChipInventor, MES, Authentic">Von Braun Labs · ChipInventor, MES, Authentic</p></li>
-            <li><span class="y">2026</span><b data-en="B.S. in Computer Science">Bacharelado em Ciência da Computação</b><p data-en="Federal Institute of São Paulo · ends in December">Instituto Federal de São Paulo · termina em dezembro</p></li>
-          </ol>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- ======== CONTACT (dark again) ======== -->
-  <section class="contact" id="contato" data-dark aria-labelledby="ct-h">
-    <video id="contactVideo" src="media/lantern.mp4" muted playsinline loop preload="none" aria-hidden="true"></video>
-    <canvas id="contactCanvas" aria-hidden="true"></canvas>
-    <div class="shade"></div>
-    <div class="wrap">
-      <p class="label mono rv"><span class="n">04</span><span data-en="Contact">Contato</span></p>
-      <h2 class="rv d1" id="ct-h" data-en="Let's talk.">Vamos conversar.</h2>
-      <p class="rv d2" data-en="A job, a freelance project or a half-built idea. Email is the shortest way.">Vaga, freela ou uma ideia meio pronta. E-mail é o caminho mais curto.</p>
-      <a class="mail rv d2" href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a>
-      <div class="links rv d3">
-        <a class="pill" href="https://www.linkedin.com/in/joao-paulo-yudi" target="_blank" rel="noopener">LinkedIn ↗</a>
-        <a class="pill" href="https://github.com/joao-paulo-yudi" target="_blank" rel="noopener">GitHub ↗</a>
-      </div>
-      <div class="foot mono">
-        <span>© 2026 João Paulo Yudi</span>
-        <span data-en="Hand-written HTML, CSS and JavaScript · images made with Higgsfield">HTML, CSS e JavaScript escritos à mão · imagens feitas com Higgsfield</span>
-      </div>
+      <footer class="foot mono"><span>© 2026 João Paulo Yudi</span><span data-en="3D drawn in code with Three.js">3D desenhado em código com Three.js</span></footer>
     </div>
   </section>
 </main>
 
-<script src="js/diagrams.js"></script>
 <script src="js/site.js"></script>
+<script type="module" src="js/scene.js"></script>
 </body>
 </html>

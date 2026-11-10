@@ -1,555 +1,244 @@
-/* Sections: i18n, nav, reveals, and one live graphic per section. */
-(function () {
-  const $ = (s, r = document) => r.querySelector(s);
-  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const root = document.documentElement;
-  const isEN = () => root.classList.contains('lang-en');
-  const T = (pt, en) => (isEN() ? en : pt);
-  const moving = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const clamp01 = v => Math.max(0, Math.min(1, v));
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+/* Stage: the lantern unfolds behind the page while it scrolls normally (nothing is pinned). */
+(function(){
+  const Q=new URLSearchParams(location.search), JUMP=Q.get('jump');
+  if(JUMP!==null)history.scrollRestoration='manual';
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+  const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  const easeOut=t=>1-Math.pow(1-t,3);
 
-  /* ---------- widget registry: one rAF for every section loop ---------- */
-  const widgets = [];
-  function widget(el, w) {
-    w.el = el; w.visible = false;
-    new IntersectionObserver(es => {
-      w.visible = es[es.length - 1].isIntersecting;
-      if (w.visible && !w.started) { w.started = true; w.start && w.start(); }
-    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 }).observe(el);
-    widgets.push(w);
-    return w;
+  /* ---------- i18n ---------- */
+  const html=document.documentElement;
+  const nodes=[...document.querySelectorAll('[data-en]')];
+  nodes.forEach(n=>n.dataset.pt=n.innerHTML);
+  const langBtn=document.getElementById('lang');
+  function setLang(l){
+    html.lang=l==='en'?'en':'pt-BR';
+    nodes.forEach(n=>{n.innerHTML=l==='en'?n.dataset.en:n.dataset.pt;});
+    langBtn.textContent=l==='en'?'PT':'EN';
+    langBtn.setAttribute('aria-label',l==='en'?'Mudar para português':'Switch to English');
+    window.Diagrams&&Diagrams.relabel(); fanInfo&&fanInfo();
+    try{localStorage.setItem('jpy-lang',l);}catch(e){}
   }
-  let last = performance.now();
-  function loop(now) {
-    const dt = Math.min(0.1, (now - last) / 1000); last = now;
-    // one thing moves at a time: of the visible live windows, only the one nearest the centre runs
-    let lead = null, best = 1e9;
-    for (const w of widgets) {
-      if (!w.visible) continue;
-      const r = w.el.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - innerHeight / 2);
-      if (d < best) { best = d; lead = w; }
+  langBtn.addEventListener('click',()=>setLang(html.lang==='en'?'pt':'en'));
+  let saved=null; try{saved=localStorage.getItem('jpy-lang');}catch(e){}
+  const startLang=Q.get('lang')||saved||(navigator.language&&!navigator.language.startsWith('pt')?'en':'pt');
+
+  /* ---------- stage ---------- */
+  const stage=document.getElementById('stage'), cv=document.getElementById('stageCanvas'), ctx=cv.getContext('2d');
+  const hanko=document.getElementById('hanko'), vid=document.getElementById('stageVideo'), wash=document.getElementById('stageWash'), shade=document.getElementById('stageShade');
+  const off=document.createElement('canvas'), octx=off.getContext('2d');
+  const N=7;
+  // focal point of each frame (0..1): lantern centre
+  const F=[[.735,.46],[.735,.46],[.735,.46],[.735,.5],[.5,.47],[.5,.47],[.5,.47]];
+  let W=0,H=0,dpr=1,portrait=false;
+  const big=()=>Math.max(innerWidth,innerHeight)*Math.min(devicePixelRatio||1,1.25)>2000;
+  const imgs=[];let loaded=0;
+  for(let i=0;i<N;i++){const im=new Image();im.decoding='async';im.src=`img/hero/k${i+1}-${big()?2400:1280}.webp`;im.onload=()=>{loaded++;need=true;};imgs.push(im);}
+  function resize(){
+    dpr=Math.min(devicePixelRatio||1,1.25); W=innerWidth;H=innerHeight; portrait=W/H<.9;
+    cv.width=off.width=Math.round(W*dpr); cv.height=off.height=Math.round(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); octx.setTransform(dpr,0,0,dpr,0,0); need=true;
+    vid.classList.toggle('portrait',portrait);
+  }
+  // returns {s,x,y} placement of image i at camera zoom z
+  function place(i,z){
+    const im=imgs[i], iw=im.naturalWidth||2400, ih=im.naturalHeight||1340, [fx,fy]=F[i];
+    if(portrait&&i<4){
+      const s0=H*.5/ih, s=s0*z; const fsx=W/2, fsy=H-ih*s0+fy*ih*s0- H*.02;
+      return {s,x:fsx-fx*iw*s,y:fsy-fy*ih*s,fsx,fsy,iw,ih};
     }
-    for (const w of widgets) {
-      if (w.scroll) w.scroll();
-      if (!w.visible || !w.started || w !== lead) continue;
-      if (moving()) w.tick && w.tick(dt);
+    const s0=Math.max(W/iw,H/ih), s=s0*z;
+    let fsx=(W-iw*s0)/2+fx*iw*s0, fsy=(H-ih*s0)/2+fy*ih*s0;
+    if(!portrait&&i<4){fsx=W*.68;} // keep the lantern right of the copy
+    let x=fsx-fx*iw*s, y=fsy-fy*ih*s;
+    x=Math.min(0,Math.max(W-iw*s,x)); y=Math.min(0,Math.max(H-ih*s,y));
+    return {s,x,y,fsx,fsy,iw,ih};
+  }
+  function draw(c,i,z){
+    const im=imgs[i]; if(!im.complete||!im.naturalWidth)return null;
+    const p=place(i,z);
+    if(portrait&&i<4){c.fillStyle='#0E0F0D';c.fillRect(0,0,W,H);}
+    c.drawImage(im,p.x,p.y,p.iw*p.s,p.ih*p.s);
+    if(portrait&&i<4){const g=c.createLinearGradient(0,p.y,0,p.y+H*.18);g.addColorStop(0,'rgba(14,15,13,1)');g.addColorStop(1,'rgba(14,15,13,0)');c.fillStyle=g;c.fillRect(0,p.y-2,W,H*.18+2);}
+    return p;
+  }
+  // per-segment camera zoom for frame i at local t (0..1 of its life)
+  function zoomOf(i,t){
+    if(i===4)return 1+.314*ease(t);   // kf05 grows into kf06's size
+    if(i===5)return 1+1.25*ease(t);   // kf06 pushes into the paper
+    return 1+.03*t;
+  }
+  let P=0,Pt=0,need=true,span=1;
+  function measure(){
+    const open=document.getElementById('open'); span=Math.max(1,open.offsetHeight-innerHeight);
+  }
+  // piecewise timeline: frames 1-4 while the copy is on screen, 5-7 once it has gone
+  function tmap(p){return p<.64?p/.64*3.62:Math.min(6,3.62+(p-.64)/.24*2.38);}
+  function render(){
+    // timeline: frames 0..6; each of 6 segments has a hold (0..h) and a handoff (h..1)
+    const segs=N-1, x=tmap(clamp(P)), i=Math.min(segs-1,Math.floor(x)), t=x-i, h=.58;
+    ctx.clearRect(0,0,W,H);
+    const hold=t<h?t/h:1, k=t<h?0:(t-h)/(1-h);
+    const zi=zoomOf(i,hold);
+    const pa=draw(ctx,i,zi);
+    if(k>0&&pa){
+      const j=i+1;
+      octx.clearRect(0,0,W,H); const pb=draw(octx,j,zoomOf(j,0));
+      if(pb){
+        const e=ease(k);
+        if(i>=4){ // aligned geometry: a soft bloom carries the handoff
+          ctx.globalAlpha=e; ctx.drawImage(off,0,0,W,H); ctx.globalAlpha=1;
+          const b=Math.sin(Math.PI*k)*.35; if(b>0){ctx.fillStyle=`rgba(255,236,214,${b})`;ctx.fillRect(0,0,W,H);}
+        } else { // iris from the lantern's heart
+          const cx=pa.fsx, cy=pa.fsy, R=Math.hypot(Math.max(cx,W-cx),Math.max(cy,H-cy))*1.05, r=R*e, fe=Math.max(40,R*.22);
+          octx.globalCompositeOperation='destination-in';
+          const g=octx.createRadialGradient(cx,cy,Math.max(0,r-fe),cx,cy,r+1);
+          g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(1,'rgba(0,0,0,0)');
+          octx.fillStyle=g;octx.fillRect(0,0,W,H);octx.globalCompositeOperation='source-over';
+          ctx.drawImage(off,0,0,W,H);
+          // warm ring of light at the front of the iris
+          const ring=ctx.createRadialGradient(cx,cy,Math.max(0,r-fe*.9),cx,cy,r+fe*.2);
+          const a=Math.sin(Math.PI*k)*.22;
+          ring.addColorStop(0,'rgba(255,214,170,0)');ring.addColorStop(.75,`rgba(255,214,170,${a})`);ring.addColorStop(1,'rgba(255,214,170,0)');
+          ctx.globalCompositeOperation='lighter';ctx.fillStyle=ring;ctx.fillRect(0,0,W,H);ctx.globalCompositeOperation='source-over';
+        }
+      }
     }
+    // shade follows the copy: strong while the hero/en copy is on screen, gone over the bright sheet
+    shade.style.opacity=String(1-clamp((P-.62)/.1));
+    wash.style.opacity=String(clamp((P-.86)/.12));
+    const hk=clamp((P-.93)/.07); hanko.style.opacity=String(hk); hanko.style.transform=`translate(-50%,-50%) scale(${1.5-.5*easeOut(hk)}) rotate(-6deg)`;
+    vid.style.opacity=P<.012?'1':'0';
+    if(P<.012&&!reduced&&vid.paused&&document.visibilityState==='visible')vid.play().catch(()=>{});
+    if(P>=.02&&!vid.paused)vid.pause();
+  }
+  function loop(){
+    const y=scrollY, target=y/span;
+    Pt=target;
+    const dP=Pt-P;
+    if(reduced||window.__settle)P=Pt; else P+=dP*.14;
+    if(Math.abs(dP)<.0002)P=Pt;
+    const visible=y<span+innerHeight*1.2;
+    stage.style.visibility=visible?'visible':'hidden';
+    if(visible&&(Math.abs(dP)>1e-5||need)){render();need=false;}
+    header();
     requestAnimationFrame(loop);
   }
-  requestAnimationFrame(loop);
-  // simple sequencer: a list of [delaySeconds, fn] steps that repeats
-  function seq(steps) {
-    let i = 0, wait = 0;
-    return {
-      tick(dt) { wait -= dt; let guard = 0; while (wait <= 0 && guard++ < 20) { const [d, fn] = steps[i]; fn && fn(); i = (i + 1) % steps.length; wait += d; } },
-      reset() { i = 0; wait = 0; }
-    };
+
+  /* ---------- header colour ---------- */
+  let lastY=0; const openers=[...document.querySelectorAll('.opener')]; const darks=[...document.querySelectorAll('.opener,.contact')]; const foldLine=document.getElementById('foldLine'); const top=document.getElementById('top'), paper=document.querySelector('.paper'), contact=document.getElementById('contato');
+  function header(){
+    const a=paper.getBoundingClientRect(), c=contact.getBoundingClientRect();
+    const p=scrollY/span; let dark=p<.78; if(p>=.78){dark=false; for(const d of darks){const r=d.getBoundingClientRect(); if(r.top<40&&r.bottom>40){dark=true;break;}}} const onPaper=!dark;
+    top.classList.toggle('on-paper',onPaper);
+    top.classList.toggle('solid',scrollY>24&&!(p>.6&&p<.95));
+    for(const o of openers){const r=o.getBoundingClientRect(); if(r.bottom>0&&r.top<innerHeight){const q=clamp(1-(r.bottom)/(r.height+innerHeight)); o.firstElementChild.style.setProperty('--z',(1.1-.1*q).toFixed(4));}}
+    const dy=scrollY-lastY; if(Math.abs(dy)>6){top.classList.toggle('away',dy>0&&scrollY>innerHeight*.9&&!(p>.6&&p<1.05));lastY=scrollY;}
+    foldLine.style.opacity=String(clamp((p-.95)/.05)*(1-clamp((p-1.08)/.1)));
   }
 
-  /* ---------- language ---------- */
-  function setLang(l) {
-    root.classList.toggle('lang-en', l === 'en');
-    root.lang = l === 'en' ? 'en' : 'pt-BR';
-    try { localStorage.setItem('jpy-lang', l); } catch (e) {}
-    $$('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
-    widgets.forEach(w => w.lang && w.lang());
+  /* ---------- kanji draw (tied to scroll) ---------- */
+  const kd=document.getElementById('kanjiDraw'), enSec=document.getElementById('en');
+  function kanji(){
+    const r=enSec.getBoundingClientRect(), q=reduced?1:clamp((innerHeight*.95-r.top)/(innerHeight*.9));
+    kd.style.strokeDashoffset=String(1400*(1-easeOut(q)));
+    kd.style.fill=`rgba(241,233,218,${clamp((q-.7)/.3)*.92})`;
+    requestAnimationFrame(kanji);
   }
-  $$('.lang button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
-  $$('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === (isEN() ? 'en' : 'pt'))));
 
-  /* ---------- in-page links glide (instant in Off) ---------- */
-  document.addEventListener('click', e => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const id = a.getAttribute('href').slice(1);
-    const t = id === 'top' ? document.body : document.getElementById(id);
-    if (!t) return;
-    e.preventDefault();
-    const y = id === 'top' ? 0 : t.getBoundingClientRect().top + scrollY - (id === 'contato' || id === 'sobre' ? 0 : 0);
-    scrollTo({ top: y, behavior: moving() ? 'smooth' : 'auto' });
-    history.replaceState(null, '', '#' + id);
+  /* ---------- reveal ---------- */
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{rootMargin:'0px 0px -10% 0px',threshold:.08});
+  document.querySelectorAll('.rv').forEach(n=>io.observe(n));
+
+  /* ---------- timeline ---------- */
+  const tl=document.getElementById('timeline'), rail=tl.querySelector('.rail i'), tlis=[...tl.querySelectorAll('li')];
+  function timeline(){
+    const r=tl.getBoundingClientRect(), q=reduced?1:clamp((innerHeight*.75-r.top)/(r.height));
+    rail.style.height=(q*100)+'%';
+    tlis.forEach(li=>{li.classList.toggle('on',(li.offsetTop+8)/tl.offsetHeight<=q+.001);});
+    requestAnimationFrame(timeline);
+  }
+
+  /* ---------- contact: the lantern again ---------- */
+  const cvid=document.getElementById('contactVideo');
+  new IntersectionObserver(es=>{const e=es[0];
+    if(e.isIntersecting){if(cvid.preload==='none'){cvid.preload='auto';cvid.load();}
+      if(!reduced)cvid.play().then(()=>{cvid.style.opacity=1;}).catch(()=>{cvid.style.opacity=1;}); else cvid.style.opacity=1;}
+    else cvid.pause();
+  },{threshold:.25}).observe(contact);
+  cvid.style.objectPosition='72% 50%';
+
+  /* ---------- fan of other projects ---------- */
+  const WORK=[
+    {n:'J&R Motos',k:'Site · guincho 24h',ke:'Site · 24h tow truck',img:'img/work/jr-motos.webp',y:'2026',st:'HTML · CSS · JS · Vercel',
+     d:'Guincho de motos em Sorocaba. O botão do WhatsApp é a maior coisa da tela, porque quem chega aqui está com a moto parada.',
+     de:'A motorcycle tow service in Sorocaba. The WhatsApp button is the biggest thing on screen, because whoever lands here has a broken bike.'},
+    {n:'Bella Formosa',k:'Catálogo · moda',ke:'Catalog · fashion',img:'img/work/bella-formosa.webp',y:'2026',st:'HTML · CSS · JS · Supabase',
+     d:'Catálogo de moda evangélica com pedido pelo WhatsApp e um painel para a própria loja editar as peças.',
+     de:'A modest-fashion catalog with ordering over WhatsApp and a panel where the store edits its own items.'},
+    {n:'Conceito Pet',k:'Site · pet shop',ke:'Site · pet shop',img:'img/work/conceito-pet.webp',y:'2026',st:'HTML · CSS · JS · Supabase',
+     d:'Pet shop em Votorantim. Agenda de banho e tosa em menos de um minuto, confirmada pelo WhatsApp.',
+     de:'A pet shop in Votorantim. Grooming booked in under a minute, confirmed over WhatsApp.'},
+    {n:'Vila da Praia',k:'Site · esportes de areia',ke:'Site · beach sports',img:'img/work/vila-da-praia.webp',y:'2026',st:'HTML · CSS · JS',
+     d:'Quadras de areia e bar. Torneios, aulas e o caminho até lá, tudo terminando numa mensagem.',
+     de:'Sand courts and a bar. Tournaments, classes and directions, all ending in one message.'},
+    {n:'Tasca Beach Club',k:'Site · reservas',ke:'Site · bookings',img:null,y:'2026',st:'HTML · CSS · JS · Supabase',
+     d:'Seis quadras de areia. Reserva de horário online e um painel para o clube cuidar da agenda.',
+     de:'Six sand courts. Online court booking and a panel for the club to run its schedule.'},
+    {n:'ChamadoPro',k:'Sistema · suporte de TI',ke:'System · IT support',img:'img/work/chamadopro.webp',y:'2026',st:'Angular · Java',
+     d:'Gestão de chamados para uma empresa de suporte: fila por prioridade, escalonamento N1, N2 e N3 e SLA por prioridade.',
+     de:'Ticketing for an IT support company: a priority queue, N1, N2 and N3 escalation and SLA per priority.'}
+  ];
+  const fan=document.getElementById('fan'), wrapF=document.getElementById('fanWrap');
+  const cards=WORK.map((w,i)=>{
+    const c=document.createElement('div'); c.className='card'; c.setAttribute('role','group'); c.setAttribute('aria-label',w.n);
+    c.innerHTML=(w.img?`<div class="ph"><img decoding="async" src="${w.img}" alt="Captura do site ${w.n}" loading="lazy"></div>`:`<div class="ph type"><span>Tasca<br>Beach<br>Club</span></div>`)+
+      `<div class="cn"><b>${w.n}</b><span>${w.y}</span></div><div class="kind" data-k="${i}"></div><span class="hk" aria-hidden="true">縁</span>`;
+    c.addEventListener('click',()=>{if(!moved)go(i);});
+    fan.appendChild(c); return c;
   });
+  let idx=2, cur=2, moved=false;
+  function fanInfo(){
+    const w=WORK[Math.round(idx)], en=html.lang==='en';
+    document.getElementById('fanName').textContent=w.n;
+    document.getElementById('fanDesc').textContent=en?w.de:w.d;
+    document.getElementById('fanMeta').textContent=`${en?w.ke:w.k} · ${w.st} · ${w.y}`;
+    document.getElementById('fanCount').textContent=`${Math.round(idx)+1} / ${WORK.length}`;
+    cards.forEach((c,i)=>{c.classList.toggle('on',i===Math.round(idx));c.querySelector('.kind').textContent=en?WORK[i].ke:WORK[i].k;});
+  }
+  window.fanInfo=fanInfo;
+  function go(i){idx=clamp(i,0,WORK.length-1);fanInfo();}
+  document.getElementById('fanPrev').onclick=()=>go(Math.round(idx)-1);
+  document.getElementById('fanNext').onclick=()=>go(Math.round(idx)+1);
+  wrapF.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){go(Math.round(idx)-1);e.preventDefault();}if(e.key==='ArrowRight'){go(Math.round(idx)+1);e.preventDefault();}});
+  let sx=0,si=0,drag=false;
+  wrapF.addEventListener('pointerdown',e=>{drag=true;moved=false;sx=e.clientX;si=idx;wrapF.classList.add('drag');wrapF.setPointerCapture(e.pointerId);});
+  wrapF.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-sx;if(Math.abs(dx)>6)moved=true;idx=clamp(si-dx/(cards[0].offsetWidth*.75),-.4,WORK.length-.6);});
+  const end=()=>{if(!drag)return;drag=false;wrapF.classList.remove('drag');go(Math.round(idx));setTimeout(()=>moved=false,0);};
+  wrapF.addEventListener('pointerup',end);wrapF.addEventListener('pointercancel',end);
+  wrapF.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)&&Math.abs(e.deltaX)>2){e.preventDefault();idx=clamp(idx+e.deltaX/400,0,WORK.length-1);clearTimeout(wrapF._t);wrapF._t=setTimeout(()=>go(Math.round(idx)),140);}},{passive:false});
+  cards.forEach(c=>c.style.transition='border-color .3s');
+  function fanTick(){
+    cur+= (idx-cur)*(reduced||window.__settle?1:.14);
+    cards.forEach((c,i)=>{const d=i-cur, ad=Math.abs(d);
+      c.style.transform=`rotate(${d*10.5}deg) translateY(${ad*6}px)`;
+      c.style.zIndex=String(100-Math.round(ad*10)); c.style.opacity=String(clamp(1.35-ad*.32,0,1));});
+    requestAnimationFrame(fanTick);
+  }
 
-
-  /* ---------- nav ---------- */
-  const nav = $('#nav');
-  const navLinks = $$('.links a');
-  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 24), { passive: true });
-  const secIO = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) navLinks.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
-  }), { rootMargin: '-45% 0px -50% 0px' });
-  $$('main .sec').forEach(s => secIO.observe(s));
-
-  /* ---------- reveals ---------- */
-  const revealEls = $$('.sec .sec-head > *, .sec .col-copy > *, .sec .win, .proj-copy > *, .card, .graph, .more-head');
-  revealEls.forEach(el => el.classList.add('reveal'));
-  const rIO = new IntersectionObserver(es => es.forEach(e => {
-    if (!e.isIntersecting) return;
-    const sibs = [...e.target.parentElement.children].filter(c => c.classList.contains('reveal'));
-    e.target.style.transitionDelay = (Math.max(0, sibs.indexOf(e.target)) * 0.08).toFixed(2) + 's';
-    e.target.classList.add('in');
-    rIO.unobserve(e.target);
-  }), { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-  revealEls.forEach(el => rIO.observe(el));
-
-  /* ---------- window tabs ---------- */
-  $$('.win-app').forEach(win => {
-    const tabs = $$('.tabs button', win);
-    tabs.forEach(b => b.addEventListener('click', () => {
-      tabs.forEach(t => t.setAttribute('aria-selected', String(t === b)));
-      $$('[data-pane]', win).forEach(p => { p.hidden = p.dataset.pane !== b.dataset.tab; });
-    }));
-  });
-
-  /* =========================================================
-     1. SOBRE · joao.ts types itself
-     ========================================================= */
-  (function about() {
-    const out = $('#about-src');
-    if (!out) return;
-    const tokens = () => {
-      const k = t => ['k', t], s = t => ['s', '"' + t + '"'], p = t => ['p', t], n = t => ['n', t], c = t => ['c', t], x = t => ['', t];
-      return [
-        k('const '), x('joao'), p(' = {\n'),
-        x('  nome'), p(': '), s('João Paulo Yudi'), p(',\n'),
-        x('  cargo'), p(': '), s(T('Desenvolvedor front-end', 'Front-end developer')), p(',\n'),
-        x('  agora'), p(': '), s('Full-Stack @ Von Braun Labs'), p(',\n'),
-        x('  stack'), p(': ['), s('Angular'), p(', '), s('React'), p(', '), s('JavaScript'), p('],\n'),
-        x('  backend'), p(': ['), s('C#'), p(', '), s('.NET'), p(', '), s('Node.js'), p(', '), s('SQL Server'), p('],\n'),
-        x('  ia'), p(': ['), s(T('LLMs via API', 'LLMs via API')), p(', '), s('tool calling'), p(', '), s(T('busca vetorial', 'vector search')), p('],\n'),
-        x('  formacao'), p(': [\n'),
-        p('    '), s(T('Ciência da Computação · IFSP · 12/2026', 'Computer Science · IFSP · 12/2026')), p(',\n'),
-        p('    '), s(T('Desenv. de Sistemas · Etec · 11/2022', 'Systems Development · Etec · 11/2022')), p(',\n'),
-        p('  ],\n'),
-        x('  idiomas'), p(': ['), s(T('português', 'Portuguese')), p(', '), s(T('inglês', 'English')), p('],\n'),
-        x('  deuAula'), p(': '), n('true'), p(', '), c(T('// inglês e informática\n', '// English and computing\n')),
-        p('};\n\n'),
-        k('export default '), x('joao'), p(';')
-      ];
-    };
-    let shown = 0, total = 0, toks = tokens();
-    total = toks.reduce((a, t) => a + t[1].length, 0);
-    function render(nChars) {
-      // typed text sits over a faint ghost of the whole file, so the window is never empty
-      let left = nChars, html = '', ghost = '';
-      for (const [cls, txt] of toks) {
-        const part = left > 0 ? txt.slice(0, left) : '';
-        const rest = txt.slice(part.length);
-        left -= txt.length;
-        if (part) html += cls ? `<span class="${cls}">${esc(part)}</span>` : esc(part);
-        if (rest) ghost += esc(rest);
-      }
-      out.innerHTML = html + '<span class="caret"></span>' + (ghost ? `<span class="ghost">${ghost}</span>` : '');
-    }
-    widget($('#about-code'), {
-      start() { if (!moving()) { shown = total; render(total); } },
-      tick(dt) { if (shown >= total) return; shown = Math.min(total, shown + dt * 260); render(Math.floor(shown)); },
-      lang() { toks = tokens(); total = toks.reduce((a, t) => a + t[1].length, 0); if (shown >= total - 40 || !moving()) shown = total; render(Math.floor(shown)); }
-    });
-    render(0);
-  })();
-
-  /* =========================================================
-     2a. STUDYENEM · answer, score, recommend
-     ========================================================= */
-  (function study() {
-    const el = $('#ui-study');
-    if (!el) return;
-    const AREAS = [['hum', 'Ciências Humanas', 'Humanities'], ['lin', 'Linguagens', 'Languages'], ['nat', 'Ciências da Natureza', 'Natural Sciences'], ['mat', 'Matemática', 'Mathematics']];
-    const score = { hum: 88, lin: 81, nat: 59, mat: 50 };
-    const QS = [
-      { area: 'mat', n: 37, q: ['Uma caixa d’água de 2 000 L perde 4% do volume por dia. Quanto resta após 2 dias?', 'A 2,000 L water tank loses 4% of its volume per day. How much is left after 2 days?'],
-        a: ['1 840 L', '1 843,2 L', '1 920 L', '1 600 L', '1 880 L'], right: 1, pick: 0, d: -2 },
-      { area: 'lin', n: 12, q: ['Em “Mal chegou, já saiu”, a palavra “mal” indica:', 'In “Mal chegou, já saiu”, the word “mal” expresses:'],
-        a: [['tempo', 'time'], ['modo', 'manner'], ['intensidade', 'intensity'], ['causa', 'cause'], ['negação', 'negation']], right: 0, pick: 0, d: 1 },
-      { area: 'nat', n: 98, q: ['Qual organela é responsável pela respiração celular?', 'Which organelle carries out cellular respiration?'],
-        a: [['Ribossomo', 'Ribosome'], ['Mitocôndria', 'Mitochondrion'], ['Lisossomo', 'Lysosome'], ['Complexo de Golgi', 'Golgi apparatus'], ['Núcleo', 'Nucleus']], right: 1, pick: 1, d: 2 },
-      { area: 'mat', n: 41, q: ['Se 3x + 5 = 20, então x vale:', 'If 3x + 5 = 20, then x equals:'], a: ['3', '4', '5', '6', '15'], right: 2, pick: 2, d: 3 }
-    ];
-    let qi = 0, hover = -1, state = 'idle';
-    const areaName = id => { const a = AREAS.find(x => x[0] === id); return T(a[1], a[2]); };
-    const lowest = () => Object.entries(score).sort((a, b) => a[1] - b[1])[0][0];
-    function build() {
-      const Q = QS[qi];
-      const alts = Q.a.map((a, i) => {
-        const txt = Array.isArray(a) ? T(a[0], a[1]) : a;
-        let cls = 'alt';
-        if (state === 'hover' && i === hover) cls += ' pick';
-        if (state === 'result') { if (i === Q.right) cls += ' right'; else if (i === Q.pick) cls += ' wrong'; }
-        return `<div class="${cls}"><b>${'ABCDE'[i]}</b>${esc(txt)}</div>`;
-      }).join('');
-      const low = lowest();
-      el.innerHTML = `
-        <div class="q">
-          <div class="q-k"><span>${esc(areaName(Q.area))} · ${T('questão', 'question')} ${Q.n}</span><span>${T('simulado', 'exam')} 9</span></div>
-          <div class="q-t">${esc(T(Q.q[0], Q.q[1]))}</div>
-          ${alts}
-        </div>
-        <div class="side">
-          <div class="card-mini">
-            <div class="q-k"><span>${T('desempenho por área', 'score by area')}</span></div>
-            ${AREAS.map(([id]) => `<div class="bar"><span>${esc(areaName(id))}</span><span class="n ${id === low ? 'low' : ''}">${score[id]}%</span><span class="track"><span class="fill ${id === low ? 'low' : ''}" style="transform:scaleX(${score[id] / 100})"></span></span></div>`).join('')}
-          </div>
-          <div class="card-mini tip"><span class="mono">${T('recomendação', 'recommendation')}</span>${T('Foque em', 'Focus on')} ${esc(areaName(low))}: ${score[low]}% ${T('de acerto. Plano de estudo atualizado.', 'correct. Study plan updated.')}</div>
-        </div>`;
-    }
-    const s = seq([
-      [0.7, () => { state = 'hover'; hover = 0; build(); }],
-      [0.45, () => { hover = 1; build(); }],
-      [0.45, () => { hover = 2; build(); }],
-      [0.6, () => { hover = QS[qi].pick; build(); }],
-      [1.3, () => { state = 'result'; const Q = QS[qi]; score[Q.area] = Math.max(0, Math.min(100, score[Q.area] + Q.d)); build(); }],
-      [2.2, () => {}],
-      [0.01, () => { qi = (qi + 1) % QS.length; state = 'idle'; hover = -1; build(); }]
-    ]);
-    function still() { qi = 0; state = 'result'; build(); }
-    widget(el.closest('.win'), { start() { moving() ? build() : still(); }, tick: dt => s.tick(dt), lang: build });
-    still();
-  })();
-
-  /* =========================================================
-     2b. EASYLAND MES · production orders flow
-     ========================================================= */
-  (function mes() {
-    const el = $('#ui-mes');
-    if (!el) return;
-    const NAMES = [
-      ['OP-39325', 'Esteira mult. 1M', 'Multi conveyor 1M'], ['OP-39366', 'Kit sensor ultrassônico', 'Ultrasonic sensor kit'],
-      ['OP-39367', 'Master 5500 DH', 'Master 5500 DH'], ['OP-39368', 'Car. tras. master', 'Rear carriage, master'],
-      ['OP-39369', 'Prot. distribuidor de adubo', 'Fertiliser spreader guard'], ['OP-39370', 'Cubo compl. do disco', 'Disc hub assembly'],
-      ['OP-39371', 'Grade niveladora', 'Levelling harrow'], ['OP-39372', 'Suporte do eixo', 'Axle bracket']
-    ];
-    let seqN = 0;
-    const mk = (lane) => { const [id, pt, en] = NAMES[seqN % NAMES.length]; seqN++; return { id: id.replace(/\d+$/, d => String(+d + Math.floor((seqN - 1) / NAMES.length) * 10)), pt, en, lane, prog: 0, qty: 200 + ((seqN * 137) % 6) * 50 }; };
-    let ops = [mk('plan'), mk('plan'), mk('plan'), mk('run'), mk('run'), mk('done')];
-    ops[3].prog = 0.55; ops[4].prog = 0.2; ops[5].prog = 1;
-    const kpi = { plan: 2584, ontime: 1181, late: 1409, doneToday: 37 };
-    el.innerHTML = `
-      <div class="kpis">
-        <div class="kpi"><div class="q-k"><span>${'<span class="pt">OPs ativas</span><span class="en">active orders</span>'}</span><i class="dot" style="background:var(--info)"></i></div><div class="kpi-v" data-k="run">0</div></div>
-        <div class="kpi"><div class="q-k"><span><span class="pt">planejadas</span><span class="en">planned</span></span></div><div class="kpi-v" data-k="plan">0</div></div>
-        <div class="kpi"><div class="q-k"><span><span class="pt">no prazo</span><span class="en">on time</span></span><i class="dot dot-ok"></i></div><div class="kpi-v" data-k="ontime">0</div></div>
-        <div class="kpi"><div class="q-k"><span><span class="pt">concluídas hoje</span><span class="en">done today</span></span></div><div class="kpi-v" data-k="doneToday">0</div></div>
-      </div>
-      <div class="lanes">
-        <div class="lane" data-lane="plan"><div class="lane-h"><i class="dot"></i><span class="pt">Planejada</span><span class="en">Planned</span></div></div>
-        <div class="lane" data-lane="run"><div class="lane-h"><i class="dot" style="background:var(--info)"></i><span class="pt">Em execução</span><span class="en">Running</span></div></div>
-        <div class="lane" data-lane="done"><div class="lane-h"><i class="dot dot-ok"></i><span class="pt">Concluída</span><span class="en">Done</span></div></div>
-      </div>`;
-    const lanes = Object.fromEntries($$('.lane', el).map(l => [l.dataset.lane, l]));
-    const nodes = new Map();
-    function card(o) {
-      let n = nodes.get(o);
-      if (!n) {
-        n = document.createElement('div'); n.className = 'op';
-        n.innerHTML = `<div class="op-h"><span>${o.id}</span><span class="op-q"></span></div><div class="op-n"><span class="pt">${esc(o.pt)}</span><span class="en">${esc(o.en)}</span></div><div class="op-bar"><i></i></div>`;
-        nodes.set(o, n);
-      }
-      const q = Math.round(o.prog * o.qty / 5) * 5;
-      if (q !== o.shownQ) {
-        o.shownQ = q;
-        n.classList.toggle('done', o.lane === 'done');
-        $('.op-q', n).textContent = `${q}/${o.qty}`;
-        $('.op-bar i', n).style.transform = `scaleX(${(q / o.qty).toFixed(3)})`;
-      }
-      return n;
-    }
-    function place(o, animate) {
-      const n = card(o);
-      if (n.parentElement !== lanes[o.lane]) {
-        if (animate) n.classList.add('enter');
-        lanes[o.lane].insertBefore(n, lanes[o.lane].children[1] || null);
-        if (animate) requestAnimationFrame(() => requestAnimationFrame(() => n.classList.remove('enter')));
-      }
-    }
-    function kpis() {
-      const run = ops.filter(o => o.lane === 'run').length;
-      $$('.kpi-v', el).forEach(v => { const k = v.dataset.k; v.textContent = (k === 'run' ? run : kpi[k]).toLocaleString(isEN() ? 'en-US' : 'pt-BR'); });
-    }
-    ops.forEach(o => place(o, false)); kpis();
-    let acc = 0;
-    function tick(dt) {
-      acc += dt;
-      ops.filter(o => o.lane === 'run').forEach(o => {
-        o.prog = Math.min(1, o.prog + dt * 0.16);
-        card(o);
-        if (o.prog >= 1) { o.lane = 'done'; o.shownQ = -1; card(o); place(o, true); kpi.doneToday++; kpi.ontime++; kpis(); }
-      });
-      if (acc > 2.6) {
-        acc = 0;
-        const next = ops.filter(o => o.lane === 'plan').pop();
-        if (next && ops.filter(o => o.lane === 'run').length < 3) { next.lane = 'run'; next.prog = 0; place(next, true); kpi.plan--; ops.push(mk('plan')); place(ops[ops.length - 1], true); kpis(); }
-        const done = ops.filter(o => o.lane === 'done');
-        if (done.length > 2) { const old = done[0]; const n = nodes.get(old); n.classList.add('leave'); setTimeout(() => { n.remove(); nodes.delete(old); }, 500); ops = ops.filter(o => o !== old); }
-      }
-    }
-    widget(el.closest('.win'), { tick, lang: kpis });
-  })();
-
-  /* =========================================================
-     2c. CHAMADOPRO · a ticket's life
-     ========================================================= */
-  (function tickets() {
-    const el = $('#ui-tix');
-    if (!el) return;
-    el.innerHTML = ['open', 'doing', 'done'].map(c => `<div class="col" data-col="${c}"><div class="lane-h"><i class="dot" style="background:${c === 'open' ? 'var(--mute-2)' : c === 'doing' ? 'var(--info)' : 'var(--ok)'}"></i>${
-      c === 'open' ? '<span class="pt">Aberto</span><span class="en">Open</span>' : c === 'doing' ? '<span class="pt">Em andamento</span><span class="en">In progress</span>' : '<span class="pt">Resolvido</span><span class="en">Resolved</span>'}</div></div>`).join('');
-    const cols = Object.fromEntries($$('.col', el).map(c => [c.dataset.col, c]));
-    const POOL = [
-      ['Impressora do RH offline', 'HR printer offline', 'high'], ['Sem acesso à VPN', 'No VPN access', 'crit'],
-      ['E-mail não sincroniza', 'Email not syncing', 'med'], ['Notebook não liga', 'Laptop won’t boot', 'high'],
-      ['Sistema de ponto lento', 'Time-clock app is slow', 'med'], ['Servidor de arquivos fora', 'File server down', 'crit']
-    ];
-    const SLA = { crit: 120, high: 240, med: 480 };
-    let id = 1041, pi = 0, list = [];
-    function newTicket() {
-      const [pt, en, pr] = POOL[pi++ % POOL.length];
-      return { id: '#' + (id++), pt, en, pr, sla: SLA[pr], lvl: 1, col: 'open', age: 0 };
-    }
-    function prLabel(pr) { return pr === 'crit' ? T('CRÍTICA', 'CRITICAL') : pr === 'high' ? T('ALTA', 'HIGH') : T('MÉDIA', 'MEDIUM'); }
-    const fmt = m => { m = Math.max(0, Math.round(m)); return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
-    function render(t) {
-      if (!t.node) { t.node = document.createElement('div'); t.node.className = 'tk enter'; t.key = ''; }
-      const n = t.node;
-      const slaTxt = t.col === 'done' ? 'ok' : fmt(t.sla);
-      const key = [t.col, t.lvl, slaTxt, isEN()].join('|');
-      if (key !== t.key) {
-        t.key = key;
-        n.classList.toggle('hot', t.col === 'doing');
-        const sla = t.col === 'done' ? `<span class="sla" style="color:var(--ok)">${T('SLA ok', 'SLA met')}</span>` : `<span class="sla ${t.sla < 60 ? 'warn' : ''}">${slaTxt}</span>`;
-        n.innerHTML = `<div class="tk-h"><span>${t.id}</span>${sla}</div><div class="tk-t">${esc(T(t.pt, t.en))}</div>
-        <div class="tk-m"><span class="badge ${t.pr === 'crit' ? 'crit' : t.pr === 'high' ? 'high' : ''}">${prLabel(t.pr)}</span><span class="badge lvl">N${t.lvl}</span></div>`;
-      }
-      if (n.parentElement !== cols[t.col]) {
-        n.classList.add('enter');
-        cols[t.col].insertBefore(n, cols[t.col].children[1] || null);
-        requestAnimationFrame(() => requestAnimationFrame(() => n.classList.remove('enter')));
-      }
-    }
-    // a believable starting board
-    list = [newTicket(), newTicket(), newTicket(), newTicket(), newTicket(), newTicket()];
-    list[0].col = 'done'; list[1].col = 'done'; list[2].col = 'doing'; list[2].sla = 95; list[3].col = 'doing'; list[3].lvl = 2; list[3].sla = 40;
-    list.forEach(render);
-    function relang() { list.forEach(render); }
-    // a steady conveyor: two open, two in progress, two resolved, always
-    let step = 2.4;
-    function tick(dt) {
-      step -= dt;
-      for (const t of list) {
-        if (t.col === 'done') continue;
-        t.sla -= dt * 9;
-        t.age += dt;
-        if (t.col === 'doing' && t.lvl === 1 && t.age > 1.4 && t.pr !== 'med') t.lvl = 2;
-        render(t);
-      }
-      if (step <= 0) {
-        step = 2.4;
-        const by = c => list.filter(t => t.col === c);
-        const old = by('done')[0];
-        if (old) { old.node.classList.add('leave'); setTimeout(() => old.node.remove(), 500); list = list.filter(t => t !== old); }
-        const d = by('doing')[0]; if (d) { d.col = 'done'; render(d); }
-        const o = by('open')[0]; if (o) { o.col = 'doing'; o.age = 0; render(o); }
-        const n = newTicket(); list.push(n); render(n);
-      }
-    }
-    widget(el.closest('.win'), { tick, lang: relang });
-  })();
-
-  /* =========================================================
-     3. HABILIDADES · skills wired to projects
-     ========================================================= */
-  (function graph() {
-    const svg = $('#graph-svg'), cap = $('#graph-cap');
-    if (!svg) return;
-    const NS = 'http://www.w3.org/2000/svg';
-    const SK = ['Angular', 'React', 'Java', 'C# · .NET', 'SQL Server', 'HTML · CSS', 'JavaScript', 'Node.js', 'SQLite', 'WordPress', 'LLMs · APIs', ['Machine Learning', 'Machine Learning'], ['Busca vetorial', 'Vector search']];
-    const PR = ['Easyland MES', 'ChamadoPro', 'StudyEnem', ['Controle de Estoque', 'Inventory Control'], 'Sanitas', 'Quiz Tech', 'Reluzi', ['Lab de IA', 'AI Lab']];
-    const E = [[0, 0], [0, 1], [0, 2], [1, 0], [2, 1], [3, 2], [3, 3], [4, 3], [5, 4], [6, 4], [6, 5], [6, 7], [7, 5], [8, 5], [9, 6], [10, 7], [11, 7], [12, 7]];
-    const TOOLS = ['Git', 'Docker', 'Photoshop'];
-    let mob = false, edges = [], skillNodes = [], projNodes = [], active = 0, hoverLock = false, pulses = [];
-    const pname = p => Array.isArray(p) ? T(p[0], p[1]) : p;
-    function node(x, y, w, label, cls) {
-      const g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'g-node ' + cls);
-      g.setAttribute('transform', `translate(${x},${y})`);
-      const r = document.createElementNS(NS, 'rect'); r.setAttribute('x', 0); r.setAttribute('y', -16); r.setAttribute('width', w); r.setAttribute('height', 32); r.setAttribute('rx', 6);
-      const t = document.createElementNS(NS, 'text'); t.setAttribute('x', 14); t.setAttribute('y', 4.5); t.textContent = label;
-      g.append(r, t); svg.appendChild(g); return g;
-    }
-    function build() {
-      svg.textContent = '';
-      mob = svg.clientWidth < 600;
-      const W = mob ? 430 : 1000, rowS = mob ? 40 : 40, H = SK.length * rowS + 40;
-      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-      const sx = 0, sw = mob ? 140 : 190, px = mob ? 250 : 760, pw = mob ? 180 : 240;
-      const sy = i => 36 + i * rowS;
-      const py = i => 36 + (SK.length - 1) * rowS * (i / (PR.length - 1));
-      const head = (x, txt) => { const t = document.createElementNS(NS, 'text'); t.setAttribute('class', 'g-col'); t.setAttribute('x', x); t.setAttribute('y', 0); t.textContent = txt; svg.appendChild(t); };
-      head(0, T('habilidade', 'skill')); head(px, T('projeto', 'project'));
-      edges = E.map(([s, p]) => {
-        const path = document.createElementNS(NS, 'path');
-        const x1 = sx + sw, y1 = sy(s), x2 = px, y2 = py(p), mx = (x1 + x2) / 2;
-        path.setAttribute('d', `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`);
-        path.setAttribute('class', 'g-edge');
-        svg.appendChild(path);
-        return { s, p, path, len: 0 };
-      });
-      skillNodes = SK.map((s, i) => { const g = node(sx, sy(i), sw, pname(s), 'skill'); g.addEventListener('mouseenter', () => { hoverLock = true; pick(i); }); g.addEventListener('mouseleave', () => { hoverLock = false; }); g.addEventListener('click', () => pick(i)); return g; });
-      projNodes = PR.map((p, i) => node(px, py(i), pw, pname(p), 'proj'));
-      // tools: a quiet row with no wires
-      const ty = H - 2;
-      const tl = document.createElementNS(NS, 'text'); tl.setAttribute('class', 'g-col'); tl.setAttribute('x', 0); tl.setAttribute('y', ty + 30); tl.textContent = T('ferramentas', 'tools'); svg.appendChild(tl);
-      TOOLS.forEach((t, i) => mob ? node(i * 140, ty + 62, 126, t, 'tool') : node(130 + i * 150, ty + 26, 130, t, 'tool'));
-      svg.setAttribute('viewBox', `0 -24 ${W} ${H + (mob ? 110 : 70)}`);
-      edges.forEach(e => { e.len = e.path.getTotalLength(); e.path.style.strokeDasharray = e.len; e.path.style.strokeDashoffset = drawn ? 0 : e.len; });
-      pulses = [];
-      pick(active, true);
-    }
-    let drawn = false;
-    function pick(i, silent) {
-      active = i;
-      skillNodes.forEach((g, k) => g.classList.toggle('on', k === i));
-      const ps = new Set();
-      edges.forEach(e => { const on = e.s === i; e.path.classList.toggle('on', on); if (on) ps.add(e.p); });
-      projNodes.forEach((g, k) => g.classList.toggle('on', ps.has(k)));
-      cap.innerHTML = `<b>${esc(pname(SK[i]))}</b> → ${[...ps].map(k => esc(pname(PR[k]))).join(', ')}`;
-      // pulses along lit edges
-      pulses.forEach(p => p.c.remove());
-      pulses = edges.filter(e => e.s === i).map(e => { const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); c.setAttribute('r', 3); c.setAttribute('class', 'g-pulse'); svg.appendChild(c); return { e, c, t: 0 }; });
-      if (!moving()) pulses.forEach(p => { const pt = p.e.path.getPointAtLength(p.e.len); p.c.setAttribute('cx', pt.x); p.c.setAttribute('cy', pt.y); });
-    }
-    let cycle = 0;
-    const w = widget($('#graph'), {
-      start() {
-        drawn = true;
-        edges.forEach((e, k) => { e.path.style.transition = `stroke-dashoffset 1.1s cubic-bezier(.16,1,.3,1) ${(k * 0.05).toFixed(2)}s, stroke .35s`; e.path.style.strokeDashoffset = 0; });
-      },
-      tick(dt) {
-        if (!hoverLock) { cycle += dt; if (cycle > 2.6) { cycle = 0; pick((active + 1) % SK.length); } }
-        pulses.forEach(p => { p.t = (p.t + dt * 0.7) % 1; const pt = p.e.path.getPointAtLength(p.t * p.e.len); p.c.setAttribute('cx', pt.x); p.c.setAttribute('cy', pt.y); });
-      },
-      lang: build
-    });
-    build();
-    let rw = svg.clientWidth;
-    new ResizeObserver(() => { if (Math.abs(svg.clientWidth - rw) > 40) { rw = svg.clientWidth; build(); } }).observe(svg);
-  })();
-
-  /* =========================================================
-     4. TRAJETÓRIA · git log --graph, drawn by the scroll
-     ========================================================= */
-  (function git() {
-    const ol = $('#git');
-    if (!ol) return;
-    // lane 0 = main (work), lane 1 = school branches. Newest first, like git log.
-    const ROWS = [
-      { lane: 1, hash: '5a7e210', ref: 'ifsp', pt: ['Ciência da Computação, IFSP', 'conclusão prevista 12/2026, em andamento'], en: ['Computer Science, IFSP', 'expected 12/2026, in progress'], rails: [0, 1] },
-      { lane: 0, hash: '7d41b0a', ref: 'HEAD -> main', head: true, pt: ['Desenvolvedor Full-Stack', 'Von Braun Labs · 2025'], en: ['Full-Stack Developer', 'Von Braun Labs · 2025'], rails: [0, 1] },
-      { lane: 0, hash: 'c2e9a11', pt: ['Estagiário de TI', 'Jungux Tecnologia · 2024'], en: ['IT Intern', 'Jungux Tecnologia · 2024'], rails: [0, 1] },
-      { lane: 0, hash: '9b03f4e', pt: ['Professor de Informática', 'Microlins · 2023'], en: ['Computing Teacher', 'Microlins · 2023'], rails: [0], fork: true },
-      { lane: 0, hash: '1f8c3d2', ref: 'etec', merge: true, pt: ['Merge: Técnico em Desenvolvimento de Sistemas', 'Etec Fernando Prestes · 11/2022'], en: ['Merge: Systems Development technical degree', 'Etec Fernando Prestes · 11/2022'], rails: [0] },
-      { lane: 0, hash: '3c6b9a0', pt: ['Professor de Inglês', 'Via Certa · 2022'], en: ['English Teacher', 'Via Certa · 2022'], rails: [0, 1] },
-      { lane: 0, hash: 'e41d07b', pt: ['Assistente de Marketing Digital', 'Kazza Art · 2022 · primeiro commit'], en: ['Digital Marketing Assistant', 'Kazza Art · 2022 · first commit'], rails: [0], first: true, etecFork: true }
-    ];
-    const X = [14, 38];
-    function rail(r) {
-      // draws the lanes that pass through this row, the dot, and any fork/merge curves
-      const h = 64, cy = 11;
-      let s = `<svg viewBox="0 0 54 ${h}" preserveAspectRatio="none" aria-hidden="true">`;
-      const line = (x, y1, y2, c) => `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${c}" stroke-width="1.5" ${c === '#a1a4a5' ? 'stroke-dasharray="3 3"' : ''} vector-effect="non-scaling-stroke"/>`;
-      const main = '#6e727a', branch = '#a1a4a5', etec = '#464a4d';
-      // main lane
-      s += line(X[0], r.hash === ROWS[1].hash || r === ROWS[0] ? (r === ROWS[0] ? cy : cy) : 0, r.first ? cy : h, main);
-      if (r === ROWS[0]) s = s.replace(line(X[0], cy, h, main), line(X[0], cy + 6, h, main));
-      // branch lane
-      if (r === ROWS[0]) s += line(X[1], cy, h, branch);
-      else if (r === ROWS[1] || r === ROWS[2]) s += line(X[1], 0, h, branch);
-      if (r.fork) s += `<path d="M${X[0]},${h} C${X[0]},${h - 26} ${X[1]},${h - 30} ${X[1]},0" fill="none" stroke="${branch}" stroke-width="1.5" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`;
-      if (r.merge) s += `<path d="M${X[1]},${h} C${X[1]},${cy + 20} ${X[0]},${cy + 14} ${X[0]},${cy}" fill="none" stroke="${etec}" stroke-width="1.5" vector-effect="non-scaling-stroke"/>`;
-      if (r === ROWS[5]) s += line(X[1], 0, h, etec);
-      if (r.etecFork) s += `<path d="M${X[0]},${cy} C${X[0]},${cy + 20} ${X[1]},${cy + 10} ${X[1]},0" fill="none" stroke="${etec}" stroke-width="1.5" vector-effect="non-scaling-stroke"/>`;
-      const dx = X[r.lane];
-      const col = r.lane ? branch : r.head ? '#ffffff' : '#a1a4a5';
-      // nodes live in their own fixed-height svg so they stay round when a row grows
-      let n = `<svg class="nodes" viewBox="0 0 54 22" aria-hidden="true"><circle cx="${dx}" cy="${cy}" r="${r.merge ? 5 : 4.5}" fill="#000" stroke="${col}" stroke-width="1.5"/>`;
-      if (r.head) n += `<circle cx="${dx}" cy="${cy}" r="2" fill="${col}"/>`;
-      return s + '</svg>' + n + '</svg>';
-    }
-    function build() {
-      ol.innerHTML = ROWS.map((r, i) => {
-        const [a, b] = isEN() ? r.en : r.pt;
-        const ref = r.ref ? `<span class="ref ${r.head ? 'is-head' : ''}">(${esc(r.ref)})</span> ` : '';
-        return `<li data-i="${i}"><span class="rail">${rail(r)}</span><span class="hash">${r.hash}</span><span class="msg">${ref}${esc(a)}<small>${esc(b)}</small></span></li>`;
-      }).join('');
-      paint(true);
-    }
-    let shownN = -1;
-    function paint(force) {
-      const lis = $$('li', ol);
-      const r = ol.getBoundingClientRect();
-      // reveal oldest first (bottom of the list) as the list rises through the viewport
-      const p = moving() ? clamp01((innerHeight * 0.95 - r.top) / (r.height * 0.55)) : 1;
-      const n = Math.round(p * lis.length * 1.15);
-      if (n === shownN && !force) return;
-      shownN = n;
-      lis.forEach((li, i) => li.classList.toggle('in', lis.length - 1 - i < n));
-    }
-    widget($('.win-git'), { scroll: () => paint(false), lang: build });
-    build();
-  })();
-
-  /* =========================================================
-     5. CONTATO · write, send, stamp
-     ========================================================= */
-  (function mail() {
-    const from = $('#m-from'), subj = $('#m-subj'), body = $('#m-body'), status = $('#m-status'), st = $('#m-status-t'), hanko = $('#hanko');
-    if (!from) return;
-    const MSGS = [
-      { f: ['recrutamento@empresa.com.br', 'talent@company.com'], s: ['Vaga de front-end', 'Front-end role'], b: ['Oi, João! Vimos o StudyEnem e o Easyland MES.\nVocê tem 20 minutos esta semana para uma conversa?', 'Hi João! We saw StudyEnem and Easyland MES.\nDo you have 20 minutes this week for a call?'] },
-      { f: ['contato@fabrica.ind.br', 'ops@factory.com'], s: ['Freela: painel de produção', 'Freelance: production dashboard'], b: ['Precisamos de um painel em React para o chão de fábrica.\nBora conversar?', 'We need a React dashboard for the factory floor.\nCan we talk?'] },
-      { f: ['dev@startup.io', 'dev@startup.io'], s: ['Sobre o cubo', 'About the cube'], b: ['Girei o cubo umas dez vezes.\nComo você fez o teclado digitar sozinho?', 'I spun the cube about ten times.\nHow did you get the keyboard to type by itself?'] }
-    ];
-    let mi = 0, typed = 0, phase = 'hold', wait = 2.6;
-    const full = () => { const m = MSGS[mi]; return { f: T(m.f[0], m.f[1]), s: T(m.s[0], m.s[1]), b: T(m.b[0], m.b[1]) }; };
-    function show(n) {
-      const m = full(); let left = n;
-      const take = str => { const part = str.slice(0, Math.max(0, left)); left -= str.length; return part; };
-      from.textContent = take(m.f); subj.textContent = take(m.s); body.textContent = take(m.b);
-    }
-    function setStatus(kind) {
-      status.className = 'status ' + (kind || '');
-      st.textContent = kind === 'sending' ? T('enviando…', 'sending…') : kind === 'sent' ? T('entregue', 'delivered') : T('rascunho', 'draft');
-      hanko.classList.toggle('on', kind === 'sent');
-    }
-    function still() { mi = 0; const m = full(); show(m.f.length + m.s.length + m.b.length); setStatus('sent'); phase = 'type'; typed = 0; }
-    function tick(dt) {
-      wait -= dt;
-      if (wait > 0) return;
-      const m = full(), total = m.f.length + m.s.length + m.b.length;
-      if (phase === 'type') {
-        if (typed === 0) setStatus('');
-        typed = Math.min(total, typed + 3); show(typed);
-        wait = 0.03;
-        if (typed >= total) { phase = 'send'; wait = 0.9; }
-      } else if (phase === 'send') { setStatus('sending'); phase = 'sent'; wait = 1.1; }
-      else if (phase === 'sent') { setStatus('sent'); phase = 'hold'; wait = 5.5; }
-      else { mi = (mi + 1) % MSGS.length; typed = 0; show(0); setStatus(''); phase = 'type'; wait = 0.5; }
-    }
-    widget($('.win-mail'), {
-      start() { still(); phase = 'hold'; wait = 4.5; },
-      tick, lang() { if (!moving() || phase !== 'type') { const m = full(); show(m.f.length + m.s.length + m.b.length); } setStatus(status.classList.contains('sent') ? 'sent' : status.classList.contains('sending') ? 'sending' : ''); }
-    });
-    still();
-  })();
-
-  // shared with js/lab.js, which adds the AI lab windows to the same loop
-  window.JPY = { widget, seq, T, esc, moving, isEN };
-
-  /* ---------- dev contract ---------- */
-  const go = () => window.MotionEngine ? MotionEngine.ready() : (window.__ready = true);
-  const sceneReady = () => window.__sceneReady || root.classList.contains('no-webgl');
-  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
-    const wait = (n = 0) => (sceneReady() || n > 120 ? go() : setTimeout(() => wait(n + 1), 50));
-    wait();
-  });
+  /* ---------- boot ---------- */
+  setLang(startLang==='en'?'en':'pt');
+  addEventListener('resize',()=>{resize();measure();});
+  resize(); measure(); fanInfo();
+  requestAnimationFrame(loop); requestAnimationFrame(kanji); requestAnimationFrame(timeline); requestAnimationFrame(fanTick);
+  // jank meter
+  const J={d:[],l:performance.now()};(function j(n){J.d.push(n-J.l);J.l=n;if(J.d.length>240)J.d.shift();requestAnimationFrame(j);})(performance.now());
+  window.__jank=()=>{const d=[...J.d].sort((a,b)=>a-b);return{p95:d[Math.floor(d.length*.95)]|0,max:d[d.length-1]|0};};
+  const ready=()=>{
+    if(JUMP!==null){window.__settle=true;scrollTo(0,+JUMP||0);document.querySelectorAll('.rv').forEach(n=>{const r=n.getBoundingClientRect();if(r.top<innerHeight)n.classList.add('in');});}
+    P=Pt=scrollY/span; need=true; render();
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{window.__ready=true;}));
+  };
+  Promise.all([document.fonts?document.fonts.ready:0,new Promise(r=>{const c=()=>loaded>=N?r():setTimeout(c,60);c();})]).then(ready);
 })();

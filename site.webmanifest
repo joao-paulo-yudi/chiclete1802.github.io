@@ -3,8 +3,8 @@
  "short_name": "JP Yudi",
  "start_url": "/",
  "display": "standalone",
- "background_color": "#EDE6D9",
- "theme_color": "#0E0F0D",
+ "background_color": "#E5E5E5",
+ "theme_color": "#E5E5E5",
  "icons": [
   {
    "src": "/icon-192.png",

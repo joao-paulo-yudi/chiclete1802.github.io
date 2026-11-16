@@ -41,13 +41,13 @@
           'Orchestrator: runs the production order (release, steps, logging, inspection, close).',
           'Production, quality, traceability and telemetry services, each with its own database, exchanging events through a broker.',
           'Inspection logging went from 15 to 2 minutes for 50+ operators.']},
-    {n:'ChamadoPro',link:'https://github.com/joao-paulo-yudi/chamado-pro',y:'2026',k:'Sistema web',ke:'Web system',st:'Angular · Java',
+    {n:'ChamadoPro',link:'https://github.com/joao-paulo-yudi/chamado-pro',y:'2025',k:'Sistema web',ke:'Web system',st:'Angular · Java',
      d:'Gestão de chamados para uma empresa de suporte de TI: fila por prioridade, escalonamento N1, N2 e N3 e SLA por prioridade.',
      de:'Ticketing for an IT support company: a priority queue, N1, N2 and N3 escalation and SLA per priority.'},
     {n:'J&R Motos',link:'https://github.com/joao-paulo-yudi/jr-motos-site',y:'2026',k:'Site',ke:'Website',st:'HTML · CSS · JavaScript · Vercel',
      d:'Site de um guincho de motos 24h em Sorocaba, com contato direto pelo WhatsApp e animações 3D leves.',
      de:'Website for a 24-hour motorcycle tow service in Sorocaba, with direct WhatsApp contact and light 3D animation.'},
-    {n:'Quiz Tech',y:'',k:'Jogo web',ke:'Web game',st:'Node.js · Express · SQLite',link:'https://github.com/joao-paulo-yudi/Quiz-Tech',
+    {n:'Quiz Tech',y:'2024',k:'Jogo web',ke:'Web game',st:'Node.js · Express · SQLite',link:'https://github.com/joao-paulo-yudi/Quiz-Tech',
      d:'Quiz web de tecnologia com uma rodada por dia e ranking entre os jogadores.',
      de:'A web tech quiz with one round per day and a ranking between players.'},
     {n:'Tasca Beach Club',link:'https://github.com/joao-paulo-yudi/tasca-beach-club-site',y:'2026',k:'Site · reservas',ke:'Website · bookings',st:'HTML · CSS · JavaScript · Supabase',
@@ -97,10 +97,17 @@
   /* ---------- header + reveal ---------- */
   const top=document.getElementById('top'); let lastY=0;
   const ct=document.getElementById('contato');
-  const ACC=['#D1FFCA','#FEC5FB','#FFC892','#CFCBFF','#A9E8F7','#FFF100'], secs=[...document.querySelectorAll('[data-form]')];
-  const paint=()=>{let f=0;for(const s of secs){if(s.getBoundingClientRect().top<=innerHeight*.6)f=+s.dataset.form;}document.body.style.setProperty('--acc',ACC[f]);};
+  const ACC=['#D1FFCA','#2E9E4F','#FFC892','#CFCBFF','#A9E8F7','#FFF100'], secs=[...document.querySelectorAll('[data-form]')];
+  const paint=()=>{let f=0;for(const s of secs){if(s.getBoundingClientRect().top<=innerHeight*.6)f=+s.dataset.form;}document.body.style.setProperty('--acc',ACC[f]);let id='';for(const x of secs){if(x.id&&x.getBoundingClientRect().top<=innerHeight*.6)id=x.id;}document.querySelectorAll('.dock a').forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+id));};
+  // phone: every section opens with an empty stage where the cubes show; they fade while a card passes over them
+  const sceneEl=document.getElementById('scene');
+  const stage=()=>{ if(innerWidth>=860){sceneEl.style.opacity='1';return;} const H=innerHeight; let v=0;
+    for(const s of secs){const r=s.getBoundingClientRect(), pad=parseFloat(getComputedStyle(s).paddingTop)||0;
+      const a=Math.max(0,Math.min(1,(r.top+pad-H*.3)/(H*.12))), b=Math.max(0,Math.min(1,(H*.8-r.top)/(H*.2))); v=Math.max(v,a*b);}
+    sceneEl.style.opacity=String(v); };
+  stage(); addEventListener('resize',stage);
   paint();
-  addEventListener('scroll',()=>{const y=scrollY;paint();const ctop=ct.getBoundingClientRect().top; document.body.classList.toggle('night',ctop<innerHeight*.55); if(innerWidth<860){const sc=document.getElementById('scene'); const hero=Math.max(0,1-y/(innerHeight*.28)); const end=Math.max(0,Math.min(1,(innerHeight*.75-ctop)/(innerHeight*.4))); sc.style.opacity=String(Math.max(hero,end));} else document.getElementById('scene').style.opacity='1';top.classList.toggle('scrolled',y>20);if(Math.abs(y-lastY)>6){top.classList.toggle('away',y>lastY&&y>innerHeight*.8);lastY=y;}},{passive:true});
+  addEventListener('scroll',()=>{const y=scrollY;paint();const ctop=ct.getBoundingClientRect().top; document.body.classList.toggle('night',ctop<innerHeight*.55); stage();top.classList.toggle('scrolled',y>20);if(Math.abs(y-lastY)>6){top.classList.toggle('away',y>lastY&&y>innerHeight*.8);lastY=y;}},{passive:true});
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{rootMargin:'0px 0px -8% 0px',threshold:.06});
   document.querySelectorAll('.rv').forEach(n=>io.observe(n));
 

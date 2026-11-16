@@ -7,7 +7,7 @@ import { RoomEnvironment } from '../vendor/RoomEnvironment.js';
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const canvas = document.getElementById('scene');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
+renderer.setPixelRatio(Math.min(devicePixelRatio || 1, innerWidth < 860 ? 1.5 : 1.75));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
@@ -90,7 +90,7 @@ const POSE = [
   { rx: 0.08, ry: -0.4, s: 0.95, x: 7.0, y: 0.4 }
 ];
 const ICON_POSE = { rx: 0.08, ry: 0.36, s: 0.95, x: -8.0, y: 0.6 };
-const ACC = ['#8BE87A', '#F58CEC', '#FF9A3D', '#8F86FF', '#35C4E6', '#FFE600'].map(c => new THREE.Color(c));
+const ACC = ['#8BE87A', '#2E9E4F', '#FF9A3D', '#8F86FF', '#35C4E6', '#FFE600'].map(c => new THREE.Color(c));
 const WHITE = new THREE.Color('#F6F5F1'), BLACK = new THREE.Color('#161616');
 
 /* ---------- instances + physics state ---------- */
@@ -143,7 +143,7 @@ const tc = new THREE.Color(), acc = new THREE.Color(), col = new THREE.Color(), 
 const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const lerp = (a, b, t) => a + (b - a) * t;
-const GREEN = new THREE.Color('#5FD34F');
+const GREEN = new THREE.Color('#2E9E4F');
 const colorOf = (ch, out) => out.copy(ch === '#' ? BLACK : ch === 'a' ? acc : ch === 'g' ? GREEN : WHITE);
 let cur = 0, t0 = performance.now(), first = true, icon = -1, iconMix = 0;
 const G = { rx: POSE[0].rx, ry: POSE[0].ry, s: POSE[0].s, x: POSE[0].x, y: POSE[0].y, fy: -6.2 };
@@ -209,7 +209,7 @@ function frame(now) {
   const idle = snap ? 0 : Math.sin(now / 2600) * 0.06, s = G.s * (mobile ? 0.62 : 1);
   group.rotation.set(G.rx + py * 0.18, G.ry + px * 0.35 + idle, 0);
   group.scale.setScalar(s);
-  group.position.set(mobile ? 0 : G.x, mobile ? 5.2 : G.y, 0);
+  group.position.set(mobile ? 0 : G.x, mobile ? 4.6 : G.y, 0);
   floor.position.y = group.position.y + G.fy * s;
 
   renderer.render(scene, camera);

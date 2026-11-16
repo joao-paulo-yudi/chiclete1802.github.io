@@ -65,7 +65,7 @@ const fit = f => {
   return f.sort((m, n) => (m.p.x - n.p.x) || (m.p.y - n.p.y));
 };
 const JPY = ['..###.####..#...#', '...#..#...#.#...#', '...#..#...#..#.#.', '...#..####....#..', '#..#..#.......#..', '#..#..#.......#..', '.##...#.......#..'];
-const ME = ['..#####..', '.#######.', '.#ooooo#.', '.o#ooo#o.', '.ooooooo.', '..o###o..', '...ooo...', '.ggggggg.', 'ggggggggg'];
+const ME = ['..#####..', '.#######.', '.#ooooo#.', '.###o###.', '.ooooooo.', '..o###o..', '...ooo...', '.ggggggg.', 'ggggggggg'];
 const MAIL = ['ooooooooo', 'oa.....ao', 'o.a...a.o', 'o..a.a..o', 'o...a...o', 'o.......o', 'ooooooooo'];
 const F = [bitmap(JPY, 2), bitmap(ME, 1), stairs(), keyboard(), towers(), bitmap(MAIL, 2)].map(fit);
 // one pictogram per project, in the order of the list

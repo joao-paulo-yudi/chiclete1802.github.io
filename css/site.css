@@ -160,3 +160,12 @@ body.night .name{color:#fff}
   #trajetoria .time li{grid-template-columns:96px 1fr;gap:12px;border-top:1px solid var(--line-2);padding:14px 0}
   #stack .stack{grid-template-columns:1fr}
 }
+
+body{--acc:#D1FFCA}
+.tag,.chips li.m,.p.open .px,.card.ink .tag{background:var(--acc);color:#111;transition:background-color .6s var(--ease)}
+p.facts{display:block;color:var(--ink-3)}
+.p{transition:padding .3s var(--ease)}
+@media (hover:hover){.p:hover .px{background:var(--acc)}}
+@media (max-width:860px){p.facts{display:none}}
+
+@media (hover:none),(max-width:860px){.hov{display:none}}

@@ -65,7 +65,7 @@ const fit = f => {
   return f.sort((m, n) => (m.p.x - n.p.x) || (m.p.y - n.p.y));
 };
 const JPY = ['..###.####..#...#', '...#..#...#.#...#', '...#..#...#..#.#.', '...#..####....#..', '#..#..#.......#..', '#..#..#.......#..', '.##...#.......#..'];
-const ME = ['..#####..', '.#######.', '.#ooooo#.', '.o#ooo#o.', '.ooooooo.', '..o###o..', '...ooo...', '.aaaaaaa.', 'aaaaaaaaa'];
+const ME = ['..#####..', '.#######.', '.#ooooo#.', '.o#ooo#o.', '.ooooooo.', '..o###o..', '...ooo...', '.ggggggg.', 'ggggggggg'];
 const MAIL = ['ooooooooo', 'oa.....ao', 'o.a...a.o', 'o..a.a..o', 'o...a...o', 'o.......o', 'ooooooooo'];
 const F = [bitmap(JPY, 2), bitmap(ME, 1), stairs(), keyboard(), towers(), bitmap(MAIL, 2)].map(fit);
 // one pictogram per project, in the order of the list
@@ -142,7 +142,8 @@ const tc = new THREE.Color(), acc = new THREE.Color(), col = new THREE.Color(), 
 const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const lerp = (a, b, t) => a + (b - a) * t;
-const colorOf = (ch, out) => out.copy(ch === '#' ? BLACK : ch === 'a' ? acc : WHITE);
+const GREEN = new THREE.Color('#5FD34F');
+const colorOf = (ch, out) => out.copy(ch === '#' ? BLACK : ch === 'a' ? acc : ch === 'g' ? GREEN : WHITE);
 let cur = 0, t0 = performance.now(), first = true, icon = -1, iconMix = 0;
 const G = { rx: POSE[0].rx, ry: POSE[0].ry, s: POSE[0].s, x: POSE[0].x, y: POSE[0].y, fy: -6.2 };
 

@@ -77,6 +77,10 @@
       </div>`).join('');
   }
   const OPEN=Q.get('open'); if(OPEN!==null){setTimeout(()=>{OPEN.split(',').forEach(i=>{const p=box.querySelector(`.p[data-i="${i}"]`); if(p){p.classList.add('open');p.querySelector('.ph').setAttribute('aria-expanded','true');}});},0);}
+  const setIcon=e=>{const p=e.target.closest&&e.target.closest('.p');window.__icon=p?+p.dataset.i:-1;};
+  box.addEventListener('pointerover',setIcon);box.addEventListener('focusin',setIcon);
+  box.addEventListener('pointerleave',()=>{window.__icon=-1;});box.addEventListener('focusout',()=>{window.__icon=-1;});
+  if(Q.get('icon')!==null)window.__icon=+Q.get('icon');
   box.addEventListener('click',e=>{const b=e.target.closest('.ph');if(!b)return;const p=b.parentElement;const o=!p.classList.contains('open');p.classList.toggle('open',o);b.setAttribute('aria-expanded',o);});
 
   /* ---------- i18n ---------- */
@@ -90,7 +94,10 @@
   /* ---------- header + reveal ---------- */
   const top=document.getElementById('top'); let lastY=0;
   const ct=document.getElementById('contato');
-  addEventListener('scroll',()=>{const y=scrollY;const ctop=ct.getBoundingClientRect().top; document.body.classList.toggle('night',ctop<innerHeight*.55); if(innerWidth<860){const sc=document.getElementById('scene'); const hero=Math.max(0,1-y/(innerHeight*.28)); const end=Math.max(0,Math.min(1,(innerHeight*.75-ctop)/(innerHeight*.4))); sc.style.opacity=String(Math.max(hero,end));} else document.getElementById('scene').style.opacity='1';top.classList.toggle('scrolled',y>20);if(Math.abs(y-lastY)>6){top.classList.toggle('away',y>lastY&&y>innerHeight*.8);lastY=y;}},{passive:true});
+  const ACC=['#D1FFCA','#FEC5FB','#FFC892','#CFCBFF','#A9E8F7','#FFF100'], secs=[...document.querySelectorAll('[data-form]')];
+  const paint=()=>{let f=0;for(const s of secs){if(s.getBoundingClientRect().top<=innerHeight*.6)f=+s.dataset.form;}document.body.style.setProperty('--acc',ACC[f]);};
+  paint();
+  addEventListener('scroll',()=>{const y=scrollY;paint();const ctop=ct.getBoundingClientRect().top; document.body.classList.toggle('night',ctop<innerHeight*.55); if(innerWidth<860){const sc=document.getElementById('scene'); const hero=Math.max(0,1-y/(innerHeight*.28)); const end=Math.max(0,Math.min(1,(innerHeight*.75-ctop)/(innerHeight*.4))); sc.style.opacity=String(Math.max(hero,end));} else document.getElementById('scene').style.opacity='1';top.classList.toggle('scrolled',y>20);if(Math.abs(y-lastY)>6){top.classList.toggle('away',y>lastY&&y>innerHeight*.8);lastY=y;}},{passive:true});
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{rootMargin:'0px 0px -8% 0px',threshold:.06});
   document.querySelectorAll('.rv').forEach(n=>io.observe(n));
 

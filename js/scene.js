@@ -100,8 +100,8 @@ mesh.castShadow = true; mesh.receiveShadow = true; mesh.frustumCulled = false; g
 
 // Separate layer placed just in front of the "Quem sou" face.
 const glassesLayer = new THREE.Group();
-const glassesFrameMaterial = new THREE.MeshStandardMaterial({ color: 0x211f1d, roughness: 0.32, metalness: 0.18, transparent: true, opacity: 0 });
-const glassesLensMaterial = new THREE.MeshStandardMaterial({ color: 0x303a3d, roughness: 0.16, metalness: 0.08, transparent: true, opacity: 0, depthWrite: false });
+const glassesFrameMaterial = new THREE.MeshStandardMaterial({ color: 0x071d2d, roughness: 0.26, metalness: 0.28, transparent: true, opacity: 0 });
+const glassesLensMaterial = new THREE.MeshPhysicalMaterial({ color: 0xc9e3e9, roughness: 0.06, transmission: 0.38, transparent: true, opacity: 0, depthWrite: false });
 const glassesGeometry = new RoundedBoxGeometry(1, 1, 1, 4, 0.17);
 const glassesLensGeometry = new RoundedBoxGeometry(1, 1, 1, 6, 0.34);
 const glassesParts = [];
@@ -114,13 +114,16 @@ const glassesPart = (x, y, w, h, d, material, rz = 0, geometry = glassesGeometry
   glassesLayer.add(part);
   glassesParts.push({ part, home: part.position.clone(), velocity: V(0, 0, 0), rz });
 };
-glassesPart(-2.1, 1.05, 2.55, 1.08, 0.09, glassesLensMaterial, -0.055, glassesLensGeometry);
-glassesPart( 2.1, 1.05, 2.55, 1.08, 0.09, glassesLensMaterial,  0.055, glassesLensGeometry);
-glassesPart(-2.1, 1.66, 2.65, 0.13, 0.15, glassesFrameMaterial, -0.055);
-glassesPart( 2.1, 1.66, 2.65, 0.13, 0.15, glassesFrameMaterial,  0.055);
-glassesPart( 0, 1.24, 1.55, 0.12, 0.14, glassesFrameMaterial);
-glassesPart(-3.68, 1.55, 0.85, 0.12, 0.14, glassesFrameMaterial,  0.08);
-glassesPart( 3.68, 1.55, 0.85, 0.12, 0.14, glassesFrameMaterial, -0.08);
+// Rectangular semi-rimless model: clear lenses, dark browline and slim temples.
+glassesPart(-2.08, 0.98, 2.62, 1.32, 0.07, glassesLensMaterial, -0.025, glassesLensGeometry);
+glassesPart( 2.08, 0.98, 2.62, 1.32, 0.07, glassesLensMaterial,  0.025, glassesLensGeometry);
+glassesPart(-2.08, 1.70, 2.80, 0.17, 0.15, glassesFrameMaterial, -0.025);
+glassesPart( 2.08, 1.70, 2.80, 0.17, 0.15, glassesFrameMaterial,  0.025);
+glassesPart( 0, 1.43, 1.48, 0.13, 0.14, glassesFrameMaterial);
+glassesPart(-3.42, 1.39, 0.13, 0.60, 0.14, glassesFrameMaterial);
+glassesPart( 3.42, 1.39, 0.13, 0.60, 0.14, glassesFrameMaterial);
+glassesPart(-3.82, 1.62, 0.88, 0.11, 0.13, glassesFrameMaterial,  0.04);
+glassesPart( 3.82, 1.62, 0.88, 0.11, 0.13, glassesFrameMaterial, -0.04);
 glassesLayer.visible = false;
 group.add(glassesLayer);
 
@@ -186,7 +189,7 @@ function frame(now) {
   const glassesMix = ease(clamp(1 - Math.abs(cur - 1) * 2, 0, 1));
   glassesLayer.visible = glassesMix > 0.001;
   glassesFrameMaterial.opacity = glassesMix;
-  glassesLensMaterial.opacity = glassesMix * 0.68;
+  glassesLensMaterial.opacity = glassesMix * 0.16;
   const sub = Math.ceil(dt / 0.016), h = dt / sub;
 
   // a hovered project draws its own pictogram while the projects section is on screen

@@ -100,26 +100,27 @@ mesh.castShadow = true; mesh.receiveShadow = true; mesh.frustumCulled = false; g
 
 // Separate layer placed just in front of the "Quem sou" face.
 const glassesLayer = new THREE.Group();
-const glassesFrameMaterial = new THREE.MeshStandardMaterial({ color: 0x161616, roughness: 0.42, transparent: true, opacity: 0 });
-const glassesLensMaterial = new THREE.MeshStandardMaterial({ color: 0x8fb4c2, roughness: 0.2, transparent: true, opacity: 0, depthWrite: false });
+const glassesFrameMaterial = new THREE.MeshStandardMaterial({ color: 0x211f1d, roughness: 0.32, metalness: 0.18, transparent: true, opacity: 0 });
+const glassesLensMaterial = new THREE.MeshStandardMaterial({ color: 0x303a3d, roughness: 0.16, metalness: 0.08, transparent: true, opacity: 0, depthWrite: false });
 const glassesGeometry = new RoundedBoxGeometry(1, 1, 1, 4, 0.17);
-const glassesPart = (x, y, w, h, d, material) => {
-  const part = new THREE.Mesh(glassesGeometry, material);
+const glassesLensGeometry = new RoundedBoxGeometry(1, 1, 1, 6, 0.34);
+const glassesParts = [];
+const glassesPart = (x, y, w, h, d, material, rz = 0, geometry = glassesGeometry) => {
+  const part = new THREE.Mesh(geometry, material);
   part.position.set(x, y, material === glassesLensMaterial ? 0.61 : 0.72);
   part.scale.set(w, h, d);
+  part.rotation.z = rz;
   part.castShadow = material === glassesFrameMaterial;
   glassesLayer.add(part);
+  glassesParts.push({ part, home: part.position.clone(), velocity: V(0, 0, 0), rz });
 };
-glassesPart(-2.1, 1.05, 2.1, 1.25, 0.08, glassesLensMaterial);
-glassesPart( 2.1, 1.05, 2.1, 1.25, 0.08, glassesLensMaterial);
-[
-  [-2.1, 1.75, 2.35, 0.18], [-2.1, 0.35, 2.35, 0.18],
-  [ 2.1, 1.75, 2.35, 0.18], [ 2.1, 0.35, 2.35, 0.18],
-  [-3.25, 1.05, 0.18, 1.58], [-0.95, 1.05, 0.18, 1.58],
-  [ 0.95, 1.05, 0.18, 1.58], [ 3.25, 1.05, 0.18, 1.58],
-  [ 0, 1.12, 1.9, 0.16],
-  [-3.72, 1.55, 0.95, 0.16], [3.72, 1.55, 0.95, 0.16]
-].forEach(([x, y, w, h]) => glassesPart(x, y, w, h, 0.18, glassesFrameMaterial));
+glassesPart(-2.1, 1.05, 2.55, 1.08, 0.09, glassesLensMaterial, -0.055, glassesLensGeometry);
+glassesPart( 2.1, 1.05, 2.55, 1.08, 0.09, glassesLensMaterial,  0.055, glassesLensGeometry);
+glassesPart(-2.1, 1.66, 2.65, 0.13, 0.15, glassesFrameMaterial, -0.055);
+glassesPart( 2.1, 1.66, 2.65, 0.13, 0.15, glassesFrameMaterial,  0.055);
+glassesPart( 0, 1.24, 1.55, 0.12, 0.14, glassesFrameMaterial);
+glassesPart(-3.68, 1.55, 0.85, 0.12, 0.14, glassesFrameMaterial,  0.08);
+glassesPart( 3.68, 1.55, 0.85, 0.12, 0.14, glassesFrameMaterial, -0.08);
 glassesLayer.visible = false;
 group.add(glassesLayer);
 
@@ -185,7 +186,8 @@ function frame(now) {
   const glassesMix = ease(clamp(1 - Math.abs(cur - 1) * 2, 0, 1));
   glassesLayer.visible = glassesMix > 0.001;
   glassesFrameMaterial.opacity = glassesMix;
-  glassesLensMaterial.opacity = glassesMix * 0.24;
+  glassesLensMaterial.opacity = glassesMix * 0.68;
+  const sub = Math.ceil(dt / 0.016), h = dt / sub;
 
   // a hovered project draws its own pictogram while the projects section is on screen
   const want = (window.__icon ?? -1); const inProj = Math.abs(cur - 4) < 0.45 && !mobile;
@@ -196,10 +198,33 @@ function frame(now) {
   // pointer ray in the group's own space
   group.updateMatrixWorld(); inv.copy(group.matrixWorld).invert();
   ray.setFromCamera(ndc, camera); ray.ray.applyMatrix4(inv);
+  for (const g of glassesParts) {
+    const gp = g.part.position, gv = g.velocity;
+    if (snap) { gp.copy(g.home); gv.set(0, 0, 0); g.part.rotation.set(0, 0, g.rz); }
+    else {
+      if (burst && glassesMix > 0.001) {
+        cp.copy(gp).normalize(); const k = 16 + Math.random() * 14;
+        gv.x += cp.x * k + (Math.random() - 0.5) * 10;
+        gv.y += cp.y * k + Math.random() * 12;
+        gv.z += cp.z * k + (Math.random() - 0.5) * 16;
+      }
+      let fx = 0, fy = 0, fz = 0;
+      if (hover && glassesMix > 0.001) {
+        ray.ray.closestPointToPoint(gp, cp); const d = gp.distanceTo(cp), R = 2.1;
+        if (d < R && d > 0.0001) { const k = (1 - d / R) * 190 / d; fx = (gp.x - cp.x) * k; fy = (gp.y - cp.y) * k; fz = (gp.z - cp.z) * k; }
+      }
+      for (let n = 0; n < sub; n++) {
+        gv.x += ((g.home.x - gp.x) * 95 - gv.x * 12.5 + fx) * h;
+        gv.y += ((g.home.y - gp.y) * 95 - gv.y * 12.5 + fy) * h;
+        gv.z += ((g.home.z - gp.z) * 95 - gv.z * 12.5 + fz) * h;
+        gp.x += gv.x * h; gp.y += gv.y * h; gp.z += gv.z * h;
+      }
+      g.part.rotation.set(clamp(gv.y * 0.035, -0.5, 0.5), clamp(gv.x * 0.035, -0.5, 0.5), g.rz + clamp(gv.z * 0.025, -0.35, 0.35));
+    }
+  }
   const typing = Math.abs(cur - 3) < 0.4;
   while (presses.length) { const k = presses.pop(); if (typing) { const i = (k * 37) % N; Vl[i * 3 + 1] -= 11; } }
 
-  const sub = Math.ceil(dt / 0.016), h = dt / sub;
   for (let i = 0; i < N; i++) {
     const A = F[a][i], B = F[b][i], t = ease(clamp(f * 1.45 - (i / N) * 0.45)), j = i * 3;
     tp.lerpVectors(A.p, B.p, t); ts.lerpVectors(A.s, B.s, t);

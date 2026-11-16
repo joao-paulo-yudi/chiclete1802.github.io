@@ -61,7 +61,10 @@
      de:'Catalog for a clothing store in Sorocaba, with ordering over WhatsApp and a panel for the store to edit items.'},
     {n:'Vila da Praia',link:'https://github.com/joao-paulo-yudi/vila-da-praia-site',y:'2026',k:'Site',ke:'Website',st:'HTML · CSS · JavaScript',
      d:'Site de um espaço de esportes de areia e bar, com agenda de eventos, mapa e contato pelo WhatsApp.',
-     de:'Website for a beach sports venue and bar, with an events calendar, a map and WhatsApp contact.'}
+     de:'Website for a beach sports venue and bar, with an events calendar, a map and WhatsApp contact.'},
+    {n:'Controle de Pedidos',link:'https://github.com/joao-paulo-yudi/controle-de-pedidos',y:'2022',k:'TCC · aplicativo desktop',ke:'Capstone · desktop app',st:'C# · Windows Forms · .NET Framework 4.7.2 · SQL Server',
+     d:'Aplicativo desktop para gerenciar clientes, produtos e pedidos, desenvolvido como TCC do curso técnico em Desenvolvimento de Sistemas.',
+     de:'Desktop app for managing customers, products and orders, built as the capstone project for a Systems Development technical program.'}
   ];
   const box=document.getElementById('proj');
   function renderProjects(){

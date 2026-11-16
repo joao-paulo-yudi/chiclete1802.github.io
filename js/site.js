@@ -97,7 +97,7 @@
   /* ---------- header + reveal ---------- */
   const top=document.getElementById('top'); let lastY=0;
   const ct=document.getElementById('contato');
-  const ACC=['#D1FFCA','#2E9E4F','#FFC892','#CFCBFF','#A9E8F7','#FFF100'], secs=[...document.querySelectorAll('[data-form]')];
+  const ACC=['#D1FFCA','#48C25A','#FFC892','#CFCBFF','#A9E8F7','#FFF100'], secs=[...document.querySelectorAll('[data-form]')];
   const paint=()=>{let f=0;for(const s of secs){if(s.getBoundingClientRect().top<=innerHeight*.6)f=+s.dataset.form;}document.body.style.setProperty('--acc',ACC[f]);let id='';for(const x of secs){if(x.id&&x.getBoundingClientRect().top<=innerHeight*.6)id=x.id;}document.querySelectorAll('.dock a').forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+id));};
   // phone: every section opens with an empty stage where the cubes show; they fade while a card passes over them
   const sceneEl=document.getElementById('scene');

@@ -90,7 +90,7 @@ const POSE = [
   { rx: 0.08, ry: -0.4, s: 0.95, x: 7.0, y: 0.4 }
 ];
 const ICON_POSE = { rx: 0.08, ry: 0.36, s: 0.95, x: -8.0, y: 0.6 };
-const ACC = ['#8BE87A', '#2E9E4F', '#FF9A3D', '#8F86FF', '#35C4E6', '#FFE600'].map(c => new THREE.Color(c));
+const ACC = ['#8BE87A', '#48C25A', '#FF9A3D', '#8F86FF', '#35C4E6', '#FFE600'].map(c => new THREE.Color(c));
 const WHITE = new THREE.Color('#F6F5F1'), BLACK = new THREE.Color('#161616');
 
 /* ---------- instances + physics state ---------- */
@@ -143,7 +143,7 @@ const tc = new THREE.Color(), acc = new THREE.Color(), col = new THREE.Color(), 
 const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
 const lerp = (a, b, t) => a + (b - a) * t;
-const GREEN = new THREE.Color('#2E9E4F');
+const GREEN = new THREE.Color('#48C25A');
 const colorOf = (ch, out) => out.copy(ch === '#' ? BLACK : ch === 'a' ? acc : ch === 'g' ? GREEN : WHITE);
 let cur = 0, t0 = performance.now(), first = true, icon = -1, iconMix = 0;
 const G = { rx: POSE[0].rx, ry: POSE[0].ry, s: POSE[0].s, x: POSE[0].x, y: POSE[0].y, fy: -6.2 };

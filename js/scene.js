@@ -65,7 +65,7 @@ const fit = f => {
   return f.sort((m, n) => (m.p.x - n.p.x) || (m.p.y - n.p.y));
 };
 const JPY = ['..###.####..#...#', '...#..#...#.#...#', '...#..#...#..#.#.', '...#..####....#..', '#..#..#.......#..', '#..#..#.......#..', '.##...#.......#..'];
-const ME = ['..#####..', '.#######.', '.#ooooo#.', '.###o###.', '.ooooooo.', '..o###o..', '...ooo...', '.ggggggg.', 'ggggggggg'];
+const ME = ['..#####..', '.#######.', '.#ooooo#.', '.o#ooo#o.', '.ooooooo.', '..o###o..', '...ooo...', '.ggggggg.', 'ggggggggg'];
 const MAIL = ['ooooooooo', 'oa.....ao', 'o.a...a.o', 'o..a.a..o', 'o...a...o', 'o.......o', 'ooooooooo'];
 const F = [bitmap(JPY, 2), bitmap(ME, 1), stairs(), keyboard(), towers(), bitmap(MAIL, 2)].map(fit);
 // one pictogram per project, in the order of the list
@@ -97,6 +97,32 @@ const WHITE = new THREE.Color('#F6F5F1'), BLACK = new THREE.Color('#161616');
 /* ---------- instances + physics state ---------- */
 const mesh = new THREE.InstancedMesh(new RoundedBoxGeometry(1, 1, 1, 4, 0.17), new THREE.MeshStandardMaterial({ roughness: 0.62 }), N);
 mesh.castShadow = true; mesh.receiveShadow = true; mesh.frustumCulled = false; group.add(mesh);
+
+// Separate layer placed just in front of the "Quem sou" face.
+const glassesLayer = new THREE.Group();
+const glassesFrameMaterial = new THREE.MeshStandardMaterial({ color: 0x161616, roughness: 0.42, transparent: true, opacity: 0 });
+const glassesLensMaterial = new THREE.MeshStandardMaterial({ color: 0x8fb4c2, roughness: 0.2, transparent: true, opacity: 0, depthWrite: false });
+const glassesGeometry = new RoundedBoxGeometry(1, 1, 1, 4, 0.17);
+const glassesPart = (x, y, w, h, d, material) => {
+  const part = new THREE.Mesh(glassesGeometry, material);
+  part.position.set(x, y, material === glassesLensMaterial ? 0.61 : 0.72);
+  part.scale.set(w, h, d);
+  part.castShadow = material === glassesFrameMaterial;
+  glassesLayer.add(part);
+};
+glassesPart(-2.1, 1.05, 2.1, 1.25, 0.08, glassesLensMaterial);
+glassesPart( 2.1, 1.05, 2.1, 1.25, 0.08, glassesLensMaterial);
+[
+  [-2.1, 1.75, 2.35, 0.18], [-2.1, 0.35, 2.35, 0.18],
+  [ 2.1, 1.75, 2.35, 0.18], [ 2.1, 0.35, 2.35, 0.18],
+  [-3.25, 1.05, 0.18, 1.58], [-0.95, 1.05, 0.18, 1.58],
+  [ 0.95, 1.05, 0.18, 1.58], [ 3.25, 1.05, 0.18, 1.58],
+  [ 0, 1.12, 1.9, 0.16],
+  [-3.72, 1.55, 0.95, 0.16], [3.72, 1.55, 0.95, 0.16]
+].forEach(([x, y, w, h]) => glassesPart(x, y, w, h, 0.18, glassesFrameMaterial));
+glassesLayer.visible = false;
+group.add(glassesLayer);
+
 const P = new Float32Array(N * 3), Vl = new Float32Array(N * 3), S = new Float32Array(N * 3), C = new Float32Array(N * 3);
 for (let i = 0; i < N; i++) { // start above the page and fall into place
   const t = F[0][i];
@@ -156,6 +182,10 @@ function frame(now) {
   px += (tx - px) * (snap ? 1 : 1 - Math.pow(0.02, dt)); py += (ty - py) * (snap ? 1 : 1 - Math.pow(0.02, dt));
   const a = Math.floor(cur), b = Math.min(F.length - 1, a + 1), f = cur - a, et = ease(f);
   acc.copy(ACC[a]).lerp(ACC[b], et);
+  const glassesMix = ease(clamp(1 - Math.abs(cur - 1) * 2, 0, 1));
+  glassesLayer.visible = glassesMix > 0.001;
+  glassesFrameMaterial.opacity = glassesMix;
+  glassesLensMaterial.opacity = glassesMix * 0.24;
 
   // a hovered project draws its own pictogram while the projects section is on screen
   const want = (window.__icon ?? -1); const inProj = Math.abs(cur - 4) < 0.45 && !mobile;

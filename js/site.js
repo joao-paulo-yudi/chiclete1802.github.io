@@ -3,30 +3,26 @@
   if(JUMP!==null)history.scrollRestoration='manual';
   const html=document.documentElement;
 
-  /* ---------- projects (one list, same weight for all) ---------- */
+  /* ---------- projects ---------- */
   const P=[
     {n:'Authentic',y:'2026',k:'Plataforma web',ke:'Web platform',st:'Angular · TypeScript · PostgreSQL · Docker',
      d:'Plataforma white-label da Beontag para criar e gerir EGCs (Entidades Gestoras de Chaves), as instâncias que guardam as chaves das tags de pedágio free-flow. Cada cliente recebe uma EGC isolada, com banco, VPN e chaves próprios.',
      de:'A white-label platform by Beontag to create and manage EGCs (key management entities), the instances that hold the keys behind free-flow toll tags. Each client gets an isolated EGC with its own database, VPN and keys.',
      flow:['Console','Provisionamento','EGC','VPN','SLT · ECT','Tags'],flowe:['Console','Provisioning','EGC','VPN','SLT · ECT','Tags'],
      pts:['Criar uma EGC sobe uma instância em Docker ou Kubernetes, com imagem dos webservices, PostgreSQL próprio, sub-rede de VPN e endereço público.',
-          'O cadastro segue a ordem do script de população: organização (região, empresas, acordos), equipamentos (SLT, ECT, MCR), tags e faixas e chaves de grupo.',
           'White-label: o que muda de um cliente para outro é dado, não código. A empresa titular, as regiões, as faixas e os acordos ficam na própria EGC.',
           'Par RSA 2048 gerado no provisionamento. A chave privada fica cifrada e nunca aparece em tela; as chaves de grupo aparecem mascaradas.'],
      ptse:['Creating an EGC starts an instance on Docker or Kubernetes, with the web services image, its own PostgreSQL, a VPN subnet and a public address.',
-          'Setup follows the seed script order: organization (regions, companies, agreements), equipment (SLT, ECT, MCR), tags, then ranges and group keys.',
           'White-label: what changes between clients is data, not code. The owning company, regions, ranges and agreements live inside each EGC.',
           'An RSA 2048 pair is generated at provisioning. The private key stays encrypted and never shows on screen; group keys are always masked.']},
     {n:'StudyENEM',y:'2026',k:'TCC · plataforma web',ke:'Capstone · web platform',st:'Angular 17 · ASP.NET Core 8 · EF Core · PostgreSQL 16',link:'https://github.com/joao-paulo-yudi/StudyENEM',
      d:'Plataforma de simulados do ENEM baseada em Learning Analytics, feita como TCC de Ciência da Computação no IFSP. Mede o desempenho por área e conteúdo e gera um plano de estudos priorizado pelo índice de dificuldade.',
      de:'An ENEM practice exam platform based on Learning Analytics, built as my Computer Science capstone at IFSP. It measures performance per area and topic and builds a study plan ranked by a difficulty index.',
      flow:['Angular','nginx','ASP.NET Core','Services','EF Core','PostgreSQL'],flowe:['Angular','nginx','ASP.NET Core','Services','EF Core','PostgreSQL'],
-     pts:['Controllers Auth, Questions, Attempts, Dashboard e StudyPlan; serviços ExamService, TriScorer, PerformanceCalculator e StudyPlanService.',
-          'Banco com a prova completa do ENEM 2022 (185 questões), criado por migrations do EF Core a partir de dados públicos do INEP.',
+     pts:['Banco com a prova completa do ENEM 2022 (185 questões), criado por migrations do EF Core a partir de dados públicos do INEP.',
           'Nota estimada pela TRI (modelo de três parâmetros), validada nos testes contra 48 notas oficiais.',
           'Ciclo de Learning Analytics: capturar, reportar, predizer, agir e refinar. Desenvolvido com Design Centrado no Usuário e avaliado com especialistas.'],
-     ptse:['Controllers Auth, Questions, Attempts, Dashboard and StudyPlan; services ExamService, TriScorer, PerformanceCalculator and StudyPlanService.',
-          'Database with the full ENEM 2022 exam (185 questions), created by EF Core migrations from public INEP data.',
+     ptse:['Database with the full ENEM 2022 exam (185 questions), created by EF Core migrations from public INEP data.',
           'Score estimated with IRT (three-parameter model), validated in tests against 48 official scores.',
           'Learning Analytics loop: capture, report, predict, act and refine. Built with User-Centered Design and evaluated with experts.']},
     {n:'Easyland',y:'2025',k:'MES · indústria',ke:'MES · manufacturing',st:'React · Angular · TypeScript',
@@ -72,13 +68,13 @@
     box.innerHTML=P.map((p,i)=>`
       <div class="p${open.includes(String(i))?' open':''}" data-i="${i}">
         <button class="ph" type="button" aria-expanded="${open.includes(String(i))}" aria-controls="pb${i}">
-          <span class="pn">${p.n}</span><span class="pk mono">${en?p.ke:p.k}</span><span class="py mono">${p.y}</span><span class="px" aria-hidden="true"></span>
+          <span class="pn">${p.n}</span><span class="pk">${en?p.ke:p.k}</span><span class="py">${p.y}</span><span class="px" aria-hidden="true"></span>
         </button>
         <div class="pb" id="pb${i}"><div class="pin">
           <p>${en?p.de:p.d}</p>
-          <p class="mono pst">${p.st}</p>
-          ${p.flow?`<p class="mono plab">${en?'Architecture':'Arquitetura'}</p><ol class="flow">${(en?p.flowe:p.flow).map(f=>`<li>${f}</li>`).join('')}</ol><ul class="pts">${(en?p.ptse:p.pts).map(t=>`<li>${t}</li>`).join('')}</ul>`:''}
-          ${p.link?`<a class="btn ghost sm" href="${p.link}" target="_blank" rel="noopener">${en?'Code on GitHub':'Código no GitHub'} ↗</a>`:''}
+          <p class="pst">${p.st}</p>
+          ${p.flow?`<p class="flow">${(en?p.flowe:p.flow).join(' → ')}</p><ul class="pts">${(en?p.ptse:p.pts).map(t=>`<li>${t}</li>`).join('')}</ul>`:''}
+          ${p.link?`<a class="btn ghost sm" href="${p.link}" target="_blank" rel="noopener">GitHub ↗</a>`:''}
         </div></div>
       </div>`).join('');
   }
@@ -97,25 +93,20 @@
   let saved=null;try{saved=localStorage.getItem('jpy-lang')}catch(e){}
   setLang(Q.get('lang')||saved||(navigator.language&&!navigator.language.startsWith('pt')?'en':'pt'));
 
-  /* ---------- header + reveal ---------- */
-  const top=document.getElementById('top'); let lastY=0;
-  const ct=document.getElementById('contato');
-  const ACC=['#D1FFCA','#48C25A','#FFC892','#CFCBFF','#A9E8F7','#FFF100'], secs=[...document.querySelectorAll('[data-form]')];
-  const paint=()=>{let f=0;for(const s of secs){if(s.getBoundingClientRect().top<=innerHeight*.6)f=+s.dataset.form;}document.body.style.setProperty('--acc',ACC[f]);let id='';for(const x of secs){if(x.id&&x.getBoundingClientRect().top<=innerHeight*.6)id=x.id;}document.querySelectorAll('.dock a').forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+id));};
+  /* ---------- header + phone nav ---------- */
+  const top=document.getElementById('top'), secs=[...document.querySelectorAll('[data-form]')], dock=[...document.querySelectorAll('.dock a')];
+  const paint=()=>{let id='';for(const x of secs){if(x.id&&x.getBoundingClientRect().top<=innerHeight*.6)id=x.id;}dock.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+id));};
   // phone: every section opens with an empty stage where the cubes show; they fade while a card passes over them
   const sceneEl=document.getElementById('scene');
   const stage=()=>{ if(innerWidth>=860){sceneEl.style.opacity='1';return;} const H=innerHeight; let v=0;
     for(const s of secs){const r=s.getBoundingClientRect(), pad=parseFloat(getComputedStyle(s).paddingTop)||0;
       const a=Math.max(0,Math.min(1,(r.top+pad-H*.3)/(H*.12))), b=Math.max(0,Math.min(1,(H*.8-r.top)/(H*.2))); v=Math.max(v,a*b);}
     sceneEl.style.opacity=String(v); };
-  stage(); addEventListener('resize',stage);
-  paint();
-  addEventListener('scroll',()=>{const y=scrollY;paint();const ctop=ct.getBoundingClientRect().top; document.body.classList.toggle('night',ctop<innerHeight*.55); stage();top.classList.toggle('scrolled',y>20);if(Math.abs(y-lastY)>6){top.classList.toggle('away',y>lastY&&y>innerHeight*.8);lastY=y;}},{passive:true});
-  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{rootMargin:'0px 0px -8% 0px',threshold:.06});
-  document.querySelectorAll('.rv').forEach(n=>io.observe(n));
+  const onScroll=()=>{paint();stage();top.classList.toggle('scrolled',scrollY>20);};
+  onScroll(); addEventListener('resize',stage); addEventListener('scroll',onScroll,{passive:true});
 
   /* ---------- dev contract ---------- */
-  const ready=()=>{ if(JUMP!==null){window.__settle=true;scrollTo(0,+JUMP||0);document.querySelectorAll('.rv').forEach(n=>n.classList.add('in'));}
+  const ready=()=>{ if(JUMP!==null){window.__settle=true;scrollTo(0,+JUMP||0);}
     requestAnimationFrame(()=>requestAnimationFrame(()=>{window.__ready=true;}));};
   const wait=()=>window.__sceneReady?ready():setTimeout(wait,50);
   (document.fonts?document.fonts.ready:Promise.resolve()).then(wait);

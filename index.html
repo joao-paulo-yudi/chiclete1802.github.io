@@ -6,7 +6,7 @@
 <title>João Paulo Yudi · Engenheiro de software</title>
 <meta name="description" content="João Paulo Yudi, engenheiro de software full-stack em Sorocaba, SP. Angular, React, C# e .NET. Trajetória, stack, projetos e contato.">
 <link rel="canonical" href="https://portfolio-jpy.vercel.app/">
-<meta name="theme-color" content="#E5E5E5">
+<meta name="theme-color" content="#F2F2F0">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="João Paulo Yudi">
@@ -26,8 +26,7 @@
 <link rel="icon" type="image/png" sizes="144x144" href="/icon-144.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="preload" as="font" type="font/woff2" href="fonts/archivo.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="fonts/geist.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/jetbrains-mono.woff2" crossorigin>
 <link rel="stylesheet" href="css/site.css">
 <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"João Paulo Yudi Kuchiki","jobTitle":"Engenheiro de software","url":"https://portfolio-jpy.vercel.app/","email":"mailto:joaopaulokuchiki@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Sorocaba","addressRegion":"SP","addressCountry":"BR"},"alumniOf":["Instituto Federal de São Paulo","Etec Fernando Prestes"],"sameAs":["https://github.com/joao-paulo-yudi","https://www.linkedin.com/in/joao-paulo-yudi"]}</script>
@@ -38,16 +37,14 @@
 
 <header class="top" id="top">
   <a class="name" href="#inicio">João Paulo Yudi</a>
-  <nav class="pill" aria-label="Principal">
+  <nav class="nav" aria-label="Principal">
     <a href="#sobre" data-en="About">Sobre</a>
     <a href="#trajetoria" data-en="Experience">Trajetória</a>
     <a href="#stack">Stack</a>
     <a href="#projetos" data-en="Projects">Projetos</a>
+    <a href="#contato" data-en="Contact">Contato</a>
   </nav>
-  <div class="top-r">
-    <button class="lang" id="lang" type="button">EN</button>
-    <a class="btn dark" href="#contato" data-en="Contact">Contato</a>
-  </div>
+  <button class="lang" id="lang" type="button">EN</button>
 </header>
 
 <nav class="dock" aria-label="Seções">
@@ -61,28 +58,25 @@
 <main id="inicio">
   <section class="hero" data-form="0" aria-labelledby="h1">
     <div class="col">
-      <h1 id="h1" class="display rv d1"><span>João</span><span>Paulo</span><span>Yudi</span></h1>
-      <p class="lead rv d2" data-en="Full-stack developer. I work with Angular, React, C# and .NET at Von Braun Labs.">Desenvolvedor full-stack. Trabalho com Angular, React, C# e .NET na Von Braun Labs.</p>
-      <div class="row rv d3">
+      <h1 id="h1">João Paulo Yudi</h1>
+      <p class="lead" data-en="Full-stack software engineer at Von Braun Labs. Angular, React, C# and .NET.">Engenheiro de software full-stack na Von Braun Labs. Angular, React, C# e .NET.</p>
+      <div class="row">
         <a class="btn dark" href="#projetos" data-en="Projects">Projetos</a>
         <a class="btn ghost" href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a>
       </div>
     </div>
-    <p class="facts mono rv d3" data-en="Move the mouse over the cubes · click to scatter them · type on the keyboard in Stack">Passe o mouse nos cubos · clique para espalhar · digite no teclado em Stack</p>
   </section>
 
   <section class="sec" id="sobre" data-form="1" aria-labelledby="sobre-h">
     <div class="col">
-      <div class="card rv">
-        <p class="tag mono" data-en="About">Sobre</p>
-        <h2 id="sobre-h" class="h2" data-en="Who I am">Quem sou</h2>
-        <p data-en="I'm João Paulo Yudi Kuchiki, from Sorocaba, São Paulo. I trained as a systems development technician, taught English and computing, and worked in IT support before moving into software full time.">Sou João Paulo Yudi Kuchiki, de Sorocaba, São Paulo. Me formei técnico em Desenvolvimento de Sistemas, dei aula de inglês e de informática e trabalhei com suporte de TI antes de ir para o desenvolvimento em tempo integral.</p>
-        <p data-en="Today I'm a software engineer at Von Braun Labs, working on the front end and back end of industrial and web platforms.">Hoje sou engenheiro de software na Von Braun Labs e trabalho no front-end e no back-end de plataformas industriais e web.</p>
-        <dl class="grid4">
-          <div><dt class="mono" data-en="Based in">Cidade</dt><dd>Sorocaba, SP</dd></div>
-          <div><dt class="mono" data-en="Now">Hoje</dt><dd>Von Braun Labs</dd></div>
-          <div><dt class="mono" data-en="Degree">Formação</dt><dd data-en="Computer Science, IFSP">Ciência da Computação, IFSP</dd></div>
-          <div><dt class="mono" data-en="Languages">Idiomas</dt><dd data-en="Portuguese, English">Português, inglês</dd></div>
+      <div class="card">
+        <h2 id="sobre-h" class="h2" data-en="About">Sobre</h2>
+        <p data-en="Systems development technician. I taught English and computing and worked in IT support before moving into software full time. Today I work on the front end and back end of industrial and web platforms.">Técnico em Desenvolvimento de Sistemas. Dei aula de inglês e de informática e trabalhei com suporte de TI antes de ir para o desenvolvimento em tempo integral. Hoje trabalho no front-end e no back-end de plataformas industriais e web.</p>
+        <dl class="facts">
+          <div><dt data-en="Based in">Cidade</dt><dd>Sorocaba, SP</dd></div>
+          <div><dt data-en="Now">Hoje</dt><dd>Von Braun Labs</dd></div>
+          <div><dt data-en="Degree">Formação</dt><dd data-en="Computer Science, IFSP">Ciência da Computação, IFSP</dd></div>
+          <div><dt data-en="Languages">Idiomas</dt><dd data-en="Portuguese, English">Português, inglês</dd></div>
         </dl>
       </div>
     </div>
@@ -90,15 +84,14 @@
 
   <section class="sec wide low" id="trajetoria" data-form="2" aria-labelledby="tr-h">
     <div class="col">
-      <div class="card rv">
-        <p class="tag mono" data-en="Experience and education">Trajetória</p>
-        <h2 id="tr-h" class="h2" data-en="Experience">Experiência e formação</h2>
+      <div class="card split">
+        <h2 id="tr-h" class="h2" data-en="Experience">Trajetória</h2>
         <ol class="time">
-          <li><span class="yr mono" data-en="2025 to now">2025 · atual</span><div><b data-en="Software engineer · Von Braun Labs">Engenheiro de software · Von Braun Labs</b><p data-en="ChipInventor, a cloud EDA platform; a MES for the shop floor; Authentic, a key management platform. Angular, React, C#, .NET and PostgreSQL.">ChipInventor, plataforma de EDA em nuvem; um MES para o chão de fábrica; Authentic, plataforma de gestão de chaves. Angular, React, C#, .NET e PostgreSQL.</p></div></li>
-          <li><span class="yr mono">2023 · 2026</span><div><b data-en="B.S. Computer Science · IFSP">Bacharelado em Ciência da Computação · IFSP</b><p data-en="Federal Institute of São Paulo, Salto campus.">Instituto Federal de São Paulo, campus Salto.</p></div></li>
-          <li><span class="yr mono">2024 · 2025</span><div><b data-en="Development intern · Jungux Tecnologia">Estágio em desenvolvimento · Jungux Tecnologia</b><p data-en="Features and fixes in web apps: chatbots, ticketing, backup management. Technical documentation for the team.">Funcionalidades e correções em aplicações web: chatbots, abertura de chamados, gestão de backups. Documentação técnica do time.</p></div></li>
-          <li><span class="yr mono" data-en="Before 2024">Antes de 2024</span><div><b data-en="English and computing teacher · IT support">Professor de inglês e informática · Suporte de TI</b><p data-en="Classes for students at different levels; hardware, software and database maintenance.">Aulas para alunos de vários níveis; manutenção de hardware, software e bancos de dados.</p></div></li>
-          <li><span class="yr mono">2022</span><div><b data-en="Systems Development technician · Etec Fernando Prestes">Técnico em Desenvolvimento de Sistemas · Etec Fernando Prestes</b></div></li>
+          <li><span class="yr" data-en="2025 to now">2025 · atual</span><div><b data-en="Software engineer · Von Braun Labs">Engenheiro de software · Von Braun Labs</b><p data-en="ChipInventor (cloud EDA), a shop-floor MES and Authentic (key management). Angular, React, C#, .NET, PostgreSQL.">ChipInventor (EDA em nuvem), um MES para chão de fábrica e Authentic (gestão de chaves). Angular, React, C#, .NET, PostgreSQL.</p></div></li>
+          <li><span class="yr">2023 · 2026</span><div><b data-en="B.S. Computer Science · IFSP">Bacharelado em Ciência da Computação · IFSP</b><p data-en="Salto campus.">Campus Salto.</p></div></li>
+          <li><span class="yr">2024 · 2025</span><div><b data-en="Development intern · Jungux Tecnologia">Estágio em desenvolvimento · Jungux Tecnologia</b><p data-en="Chatbots, ticketing and backup management web apps.">Aplicações web de chatbots, chamados e gestão de backups.</p></div></li>
+          <li><span class="yr" data-en="Before 2024">Antes de 2024</span><div><b data-en="English and computing teacher · IT support">Professor de inglês e informática · Suporte de TI</b></div></li>
+          <li><span class="yr">2022</span><div><b data-en="Systems Development technician · Etec Fernando Prestes">Técnico em Desenvolvimento de Sistemas · Etec Fernando Prestes</b></div></li>
         </ol>
       </div>
     </div>
@@ -106,14 +99,13 @@
 
   <section class="sec wide low" id="stack" data-form="3" aria-labelledby="st-h">
     <div class="col">
-      <div class="card rv">
-        <p class="tag mono">Stack</p>
-        <h2 id="st-h" class="h2" data-en="Tools">Ferramentas</h2>
+      <div class="card split">
+        <h2 id="st-h" class="h2">Stack</h2>
         <div class="stack">
-          <div><h3 class="mono">Front-end</h3><ul class="chips"><li class="m">Angular</li><li class="m">React</li><li>TypeScript</li><li>JavaScript</li><li>HTML</li><li>CSS</li><li>Three.js</li></ul></div>
-          <div><h3 class="mono">Back-end</h3><ul class="chips"><li class="m">C#</li><li class="m">.NET</li><li>ASP.NET Core</li><li>Entity Framework</li><li>Node.js</li><li>Express</li><li>Java</li></ul></div>
-          <div><h3 class="mono" data-en="Data">Dados</h3><ul class="chips"><li class="m">PostgreSQL</li><li>SQL Server</li><li>SQLite</li><li>Supabase</li></ul></div>
-          <div><h3 class="mono" data-en="Tools">Ferramentas</h3><ul class="chips"><li>Git</li><li>Docker</li><li>Vercel</li><li>Jira</li><li>Scrum</li><li>Figma</li></ul></div>
+          <div><h3>Front-end</h3><ul class="chips"><li class="m">Angular</li><li class="m">React</li><li>TypeScript</li><li>JavaScript</li><li>HTML</li><li>CSS</li><li>Three.js</li></ul></div>
+          <div><h3>Back-end</h3><ul class="chips"><li class="m">C#</li><li class="m">.NET</li><li>ASP.NET Core</li><li>Entity Framework</li><li>Node.js</li><li>Express</li><li>Java</li></ul></div>
+          <div><h3 data-en="Data">Dados</h3><ul class="chips"><li class="m">PostgreSQL</li><li>SQL Server</li><li>SQLite</li><li>Supabase</li></ul></div>
+          <div><h3 data-en="Tools">Ferramentas</h3><ul class="chips"><li>Git</li><li>Docker</li><li>Vercel</li><li>Jira</li><li>Scrum</li><li>Figma</li></ul></div>
         </div>
       </div>
     </div>
@@ -121,28 +113,24 @@
 
   <section class="sec right" id="projetos" data-form="4" aria-labelledby="pr-h">
     <div class="col">
-      <div class="card rv">
-        <p class="tag mono" data-en="Projects">Projetos</p>
-        <h2 id="pr-h" class="h2" data-en="Selected work">Projetos</h2>
-        <p class="sub" data-en="&lt;span class=&quot;hov&quot;&gt;Hover a project and the cubes draw it. &lt;/span&gt;Click to see what it is and how it is built."><span class="hov">Passe o mouse num projeto e os cubos desenham. </span>Clique para ver o que é e como foi feito.</p>
+      <div class="card">
+        <h2 id="pr-h" class="h2" data-en="Projects">Projetos</h2>
         <div class="proj" id="proj"></div>
       </div>
     </div>
   </section>
 
-  <section class="sec dark" id="contato" data-form="5" aria-labelledby="ct-h">
+  <section class="sec" id="contato" data-form="5" aria-labelledby="ct-h">
     <div class="col">
-      <div class="rv">
-        <p class="tag mono" data-en="Contact">Contato</p>
-        <h2 id="ct-h" class="display small" data-en="Contact">Contato</h2>
+      <div class="card">
+        <h2 id="ct-h" class="h2" data-en="Contact">Contato</h2>
         <ul class="links">
-          <li><span class="mono">E-mail</span><a href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a></li>
-          <li><span class="mono">LinkedIn</span><a href="https://www.linkedin.com/in/joao-paulo-yudi" target="_blank" rel="noopener">linkedin.com/in/joao-paulo-yudi</a></li>
-          <li><span class="mono">GitHub</span><a href="https://github.com/joao-paulo-yudi" target="_blank" rel="noopener">github.com/joao-paulo-yudi</a></li>
-          <li><span class="mono" data-en="City">Cidade</span><span>Sorocaba, SP</span></li>
+          <li><span>E-mail</span><a href="mailto:joaopaulokuchiki@gmail.com">joaopaulokuchiki@gmail.com</a></li>
+          <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/joao-paulo-yudi" target="_blank" rel="noopener">linkedin.com/in/joao-paulo-yudi</a></li>
+          <li><span>GitHub</span><a href="https://github.com/joao-paulo-yudi" target="_blank" rel="noopener">github.com/joao-paulo-yudi</a></li>
         </ul>
       </div>
-      <footer class="foot mono"><span>© 2026 João Paulo Yudi</span><span data-en="3D drawn in code with Three.js">3D desenhado em código com Three.js</span></footer>
+      <p class="foot">© 2026 João Paulo Yudi · Sorocaba, SP</p>
     </div>
   </section>
 </main>

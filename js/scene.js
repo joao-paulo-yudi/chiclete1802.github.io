@@ -91,11 +91,11 @@ const POSE = [
   { rx: 0.08, ry: -0.4, s: 0.95, x: 7.0, y: 0.4 }
 ];
 const ICON_POSE = { rx: 0.08, ry: 0.36, s: 0.95, x: -8.0, y: 0.6 };
-const ACC = ['#8BE87A', '#48C25A', '#FF9A3D', '#8F86FF', '#35C4E6', '#FFE600'].map(c => new THREE.Color(c));
+const ACC = Array(6).fill(new THREE.Color('#2F9E44')); // one accent for every section
 const WHITE = new THREE.Color('#F6F5F1'), BLACK = new THREE.Color('#161616');
 
 /* ---------- instances + physics state ---------- */
-const mesh = new THREE.InstancedMesh(new RoundedBoxGeometry(1, 1, 1, 4, 0.17), new THREE.MeshStandardMaterial({ roughness: 0.62 }), N);
+const mesh = new THREE.InstancedMesh(new RoundedBoxGeometry(1, 1, 1, 2, 0.06), new THREE.MeshStandardMaterial({ roughness: 0.62 }), N);
 mesh.castShadow = true; mesh.receiveShadow = true; mesh.frustumCulled = false; group.add(mesh);
 
 // Separate layer placed just in front of the "Quem sou" face.
